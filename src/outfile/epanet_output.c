@@ -230,7 +230,7 @@ int EXPORT_OUT_API ENR_getVersion(ENR_Handle p_handle, int *version)
             errorcode = 436;
     }
 
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getNetSize(ENR_Handle p_handle, int **elementCount, int *length)
@@ -258,7 +258,7 @@ int EXPORT_OUT_API ENR_getNetSize(ENR_Handle p_handle, int **elementCount, int *
         *length = NELEMENTTYPES;
     }
 
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes code, int *unitFlag)
@@ -332,7 +332,7 @@ int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes code, int *un
         default: errorcode = 421;
         }
     }
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getTimes(ENR_Handle p_handle, ENR_Time code, int *time)
@@ -377,7 +377,7 @@ int EXPORT_OUT_API ENR_getTimes(ENR_Handle p_handle, ENR_Time code, int *time)
             errorcode = 421;
         }
     }
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getChemData(ENR_Handle p_handle, char **name, int *length)
@@ -439,7 +439,7 @@ int EXPORT_OUT_API ENR_getElementName(ENR_Handle p_handle, ENR_ElementType type,
             strncpy(*name, temp, (*length + 1) * sizeof(char));
     }
 
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getEnergyUsage(ENR_Handle p_handle, int pumpIndex,
@@ -481,7 +481,7 @@ int EXPORT_OUT_API ENR_getEnergyUsage(ENR_Handle p_handle, int pumpIndex,
         *outValues = temp;
         *length = NENERGYRESULTS;
     }
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getNetReacts(ENR_Handle p_handle, float **outValues, int *length)
@@ -513,7 +513,7 @@ int EXPORT_OUT_API ENR_getNetReacts(ENR_Handle p_handle, float **outValues, int 
         *outValues = temp;
         *length = NREACTRESULTS;
     }
-    return errorcode;;
+    return errorcode;
 }
 
 void EXPORT_OUT_API ENR_freeMemory(void *memory)
@@ -553,7 +553,7 @@ int EXPORT_OUT_API ENR_getNodeSeries(ENR_Handle p_handle, int nodeIndex, ENR_Nod
         *outValueSeries = temp;
         *dim = length;
     }
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getLinkSeries(ENR_Handle p_handle, int linkIndex, ENR_LinkAttribute attr,
@@ -585,7 +585,7 @@ int EXPORT_OUT_API ENR_getLinkSeries(ENR_Handle p_handle, int linkIndex, ENR_Lin
         *outValueSeries = temp;
         *dim = length;
     }
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getNodeAttribute(ENR_Handle p_handle, int periodIndex,
@@ -631,7 +631,7 @@ int EXPORT_OUT_API ENR_getNodeAttribute(ENR_Handle p_handle, int periodIndex,
         *length = p_handle->nodeCount;
     }
 
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getLinkAttribute(ENR_Handle p_handle, int periodIndex,
@@ -678,7 +678,7 @@ int EXPORT_OUT_API ENR_getLinkAttribute(ENR_Handle p_handle, int periodIndex,
         *length = p_handle->linkCount;
     }
 
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getNodeResult(ENR_Handle p_handle, int periodIndex,
@@ -705,7 +705,7 @@ int EXPORT_OUT_API ENR_getNodeResult(ENR_Handle p_handle, int periodIndex,
         *length = NNODERESULTS;
     }
 
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
@@ -729,7 +729,7 @@ int EXPORT_OUT_API ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
         *outValueArray = temp;
         *length = NLINKRESULTS;
     }
-    return errorcode;;
+    return errorcode;
 }
 
 int EXPORT_OUT_API ENR_getError(int err_code, char **err_msg)
