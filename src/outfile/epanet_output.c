@@ -70,7 +70,7 @@ typedef struct Handle {
 
     error_handle_t *error_handle;
     file_handle_t *file_handle;
-} Handle, *EN_Handle;
+} Handle, *ENR_Handle;
 
 
 //-----------------------------------------------------------------------------
@@ -132,34 +132,6 @@ int EXPORT_OUT_API ENR_deleteHandle(ENR_Handle p_handle)
 }
 
 
-int EXPORT_OUT_API ENR_closeFile(ENR_Handle p_handle)
-/*------------------------------------------------------------------------
- **    Input:  p_handle = pointer to ENR_Handle struct
- **
- **  Returns:  Error code 0 on success, -1 on failure
- **
- **  Purpose:  Close the output binary file, dellocate ENR_Handle struc
- **            and nullify pointer to ENR_Handle struct
- **
- **  NOTE: ENR_close must be called before program end
- **        after calling ENR_close data in  ENR_Handle struct are no more
- **        accessible
- **-------------------------------------------------------------------------
- */
-{
-    int errorcode = 0;
-
-    if (p_handle == NULL || p_handle->file_handle == NULL)
-        errorcode = -1;
-
-    else
-    {
-        close_file(p_handle->file_handle);
-    }
-
-    return errorcode;
-}
-
 int EXPORT_OUT_API ENR_openFile(ENR_Handle p_handle, const char *path)
 /*------------------------------------------------------------------------
  **   Input:   path
@@ -220,6 +192,35 @@ int EXPORT_OUT_API ENR_openFile(ENR_Handle p_handle, const char *path)
     return errorcode;
 }
 
+int EXPORT_OUT_API ENR_closeFile(ENR_Handle p_handle)
+/*------------------------------------------------------------------------
+ **    Input:  p_handle = pointer to ENR_Handle struct
+ **
+ **  Returns:  Error code 0 on success, -1 on failure
+ **
+ **  Purpose:  Close the output binary file, dellocate ENR_Handle struc
+ **            and nullify pointer to ENR_Handle struct
+ **
+ **  NOTE: ENR_close must be called before program end
+ **        after calling ENR_close data in  ENR_Handle struct are no more
+ **        accessible
+ **-------------------------------------------------------------------------
+ */
+{
+    int errorcode = 0;
+
+    if (p_handle == NULL || p_handle->file_handle == NULL)
+        errorcode = -1;
+
+    else
+    {
+        close_file(p_handle->file_handle);
+    }
+
+    return errorcode;
+}
+
+
 int EXPORT_OUT_API ENR_getVersion(ENR_Handle p_handle, int *version)
 /*------------------------------------------------------------------------
  **    Input: p_handle = pointer to ENR_Handle struct
@@ -271,7 +272,7 @@ int EXPORT_OUT_API ENR_getNetSize(ENR_Handle p_handle, int **elementCount, int *
     return set_error(p_handle->error_handle, errorcode);
 }
 
-int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_Units code, int *unitFlag)
+int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes code, int *unitFlag)
 /*------------------------------------------------------------------------
  **   Input:   p_handle = pointer to ENR_Handle struct
  **            code
@@ -312,7 +313,7 @@ int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_Units code, int *unitFl
             read_file(unitFlag, WORDSIZE, 1, p_handle->file_handle);
             break;
 
-        case ENR_pressUnits:
+        case ENR_presUnits:
             seek_file(p_handle->file_handle, 10*WORDSIZE, SEEK_SET);
             read_file(unitFlag, WORDSIZE, 1, p_handle->file_handle);
             break;
@@ -404,19 +405,16 @@ int EXPORT_OUT_API ENR_getElementName(ENR_Handle p_handle, ENR_ElementType type,
  **   Output:  name = elementName
  **  Returns: error code
  **  Purpose: Retrieves Name of a specified node or link element
- **  NOTE: 'name' must be able to hold MAXID characters
  **  TODO: Takes EPANET indexing from 1 to n not 0 to n-1
  **-------------------------------------------------------------------------
  */
 {
     F_OFF offset;
     int errorcode = 0;
-    char *temp;
+    char temp[MAXID_P1];
 
-    if (p_handle == NULL) return -1;
-    /* Allocate memory for name */
-    else if MEMCHECK(temp = newCharArray(MAXID_P1)) errorcode = 411;
-
+    if (p_handle == NULL)
+        return -1;
     else
     {
         switch (type)
@@ -444,9 +442,12 @@ int EXPORT_OUT_API ENR_getElementName(ENR_Handle p_handle, ENR_ElementType type,
             seek_file(p_handle->file_handle, offset, SEEK_SET);
             read_file(temp, 1, MAXID_P1, p_handle->file_handle);
 
-            *name = temp;
-            *length = MAXID_P1;
+            // Trim string to length
+            *length = (int)strlen(temp);
+            if MEMCHECK(*name = newCharArray(*length + 1)) errorcode = 411;
         }
+        if (!errorcode)
+            strncpy(*name, temp, (*length + 1) * sizeof(char));
     }
 
     return set_error(p_handle->error_handle, errorcode);
@@ -742,18 +743,32 @@ int EXPORT_OUT_API ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
     return set_error(p_handle->error_handle, errorcode);
 }
 
-void EXPORT_OUT_API ENR_clearError(ENR_Handle p_handle)
+//void EXPORT_OUT_API ENR_clearError(ENR_Handle p_handle)
+//{
+//    clear_error(p_handle->error_handle);
+//}
+
+//int EXPORT_OUT_API ENR_checkError(ENR_Handle p_handle, char **msg_buffer)
+//{
+//    if (p_handle == NULL) return -1;
+//
+//    return check_error(p_handle->error_handle, msg_buffer);
+//}
+
+
+int EXPORT_OUT_API ENR_getError(int err_code, char **err_msg)
 {
-    clear_error(p_handle->error_handle);
+    char *temp = NULL;
+
+    if (err_code != 0) {
+        temp = newCharArray(MSG_MAXLEN);
+        errorLookup(err_code, temp, MSG_MAXLEN);
+    }
+
+    *err_msg = temp;
+
+    return 0;
 }
-
-int EXPORT_OUT_API ENR_checkError(ENR_Handle p_handle, char **msg_buffer)
-{
-    if (p_handle == NULL) return -1;
-
-    return check_error(p_handle->error_handle, msg_buffer);
-}
-
 
 void errorLookup(int errcode, char *dest_msg, int dest_len)
 //
@@ -785,7 +800,7 @@ void errorLookup(int errcode, char *dest_msg, int dest_len)
     default:  msg = ERRERR;
     }
 
-    strncpy(dest_msg, msg, MSG_MAXLEN);
+    strncpy(dest_msg, msg, dest_len);
 }
 
 int validateFile(ENR_Handle p_handle)

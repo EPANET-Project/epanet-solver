@@ -29,7 +29,7 @@ target_include_directories(epanet-output
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${INCLUDE_DIST}>
     PRIVATE
-        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/..
     )
 
 include(GenerateExportHeader)
@@ -50,6 +50,14 @@ install(TARGETS epanet-output EXPORT epanet-outputTargets
     LIBRARY    DESTINATION "${TOOL_DIST}"
     ARCHIVE    DESTINATION "${LIBRARY_DIST}"
     FRAMEWORK  DESTINATION "${TOOL_DIST}"
+    )
+
+# Install target import scripts so other cmake projects can use epanet libraries
+install(EXPORT epanet-outputTargets
+    DESTINATION
+        "${CONFIG_DIST}"
+    FILE
+        epanet-output-config.cmake
     )
 
 install(FILES ${EPANET_OUT_PUBLIC_HEADERS} DESTINATION "${INCLUDE_DIST}")

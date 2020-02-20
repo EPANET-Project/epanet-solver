@@ -74,10 +74,10 @@ if(BUILD_DOCS)
   add_subdirectory(doc)
 endif()
 
-add_subdirectory(src/run)
-add_subdirectory(src/solver)
-add_subdirectory(src/shared)
 add_subdirectory(src/outfile)
+add_subdirectory(src/run)
+add_subdirectory(src/shared)
+add_subdirectory(src/solver)
 
 if(BUILD_TESTS)
     enable_testing()
@@ -93,25 +93,6 @@ install(
         "${CMAKE_CURRENT_SOURCE_DIR}/ReleaseNotes.md"
     DESTINATION
         "./"
-    )
-
-# Install target import scripts so other cmake projects can use epanet libraries
-install(
-    EXPORT
-        epanet2Targets
-    DESTINATION
-        "${CONFIG_DIST}"
-    FILE
-        epanet2-config.cmake
-    )
-
-install(
-    EXPORT
-        epanet-outputTargets
-    DESTINATION
-        "${CONFIG_DIST}"
-    FILE
-        epanet-output-config.cmake
     )
 
 

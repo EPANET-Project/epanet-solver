@@ -1350,7 +1350,7 @@ int DLLEXPORT EN_setoption(EN_Project p, int option, double value)
     return 0;
 }
 
-int DLLEXPORT EN_getflowunits(EN_Project p, int *units)
+int DLLEXPORT EN_getflowunits(EN_Project p, EN_FlowUnits *units)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  units = flow units code (see EN_FlowUnits)
@@ -1365,7 +1365,7 @@ int DLLEXPORT EN_getflowunits(EN_Project p, int *units)
     return 0;
 }
 
-int DLLEXPORT EN_setflowunits(EN_Project p, int units)
+int DLLEXPORT EN_setflowunits(EN_Project p, EN_FlowUnits units)
 /*----------------------------------------------------------------
 **  Input:   units = flow units code (see EN_FlowUnits)
 **  Output:  none
@@ -1597,7 +1597,7 @@ int DLLEXPORT EN_settimeparam(EN_Project p, int param, long value)
     return 0;
 }
 
-int DLLEXPORT EN_getqualinfo(EN_Project p, int *qualType, char *chemName,
+int DLLEXPORT EN_getqualinfo(EN_Project p, EN_QualityType *qualType, char *chemName,
                              char *chemUnits, int *traceNode)
 /*----------------------------------------------------------------
 **  Input:   none
@@ -1634,7 +1634,7 @@ int DLLEXPORT EN_getqualinfo(EN_Project p, int *qualType, char *chemName,
     return 0;
 }
 
-int DLLEXPORT EN_getqualtype(EN_Project p, int *qualType, int *traceNode)
+int DLLEXPORT EN_getqualtype(EN_Project p, EN_QualityType *qualType, int *traceNode)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  qualType = type of quality analysis to run (see EN_QualityType)
@@ -1881,7 +1881,8 @@ int DLLEXPORT EN_deletenode(EN_Project p, int index, int actionCode)
 {
     Network *net = &p->network;
 
-    int i, nodeType, tankindex;
+    int i, tankindex;
+    EN_NodeType nodeType;
     Snode *node;
 
     // Cannot modify network structure while solvers are active
@@ -2037,7 +2038,7 @@ int DLLEXPORT EN_setnodeid(EN_Project p, int index, char *newid)
     return 0;
 }
 
-int DLLEXPORT EN_getnodetype(EN_Project p, int index, int *nodeType)
+int DLLEXPORT EN_getnodetype(EN_Project p, int index, EN_NodeType *nodeType)
 /*----------------------------------------------------------------
 **  Input:   index = node index
 **  Output:  nodeType  = node type (see EN_NodeType)
@@ -2730,7 +2731,7 @@ int DLLEXPORT EN_setcoord(EN_Project p, int index, double x, double y)
 
 ********************************************************************/
 
-int DLLEXPORT EN_getdemandmodel(EN_Project p, int *model, double *pmin,
+int DLLEXPORT EN_getdemandmodel(EN_Project p, EN_DemandModel *model, double *pmin,
                                 double *preq, double *pexp)
 /*----------------------------------------------------------------
 **  Input:   none
@@ -3265,7 +3266,7 @@ int DLLEXPORT EN_deletelink(EN_Project p, int index, int actionCode)
     int i;
     int pumpindex;
     int valveindex;
-    int linkType;
+    EN_LinkType linkType;
     Slink *link;
 
     // Cannot modify network structure while solvers are active
@@ -3412,10 +3413,10 @@ int DLLEXPORT EN_setlinkid(EN_Project p, int index, char *newid)
     return 0;
 }
 
-int DLLEXPORT EN_getlinktype(EN_Project p, int index, int *linkType)
+int DLLEXPORT EN_getlinktype(EN_Project p, int index, EN_LinkType *linkType)
 /*----------------------------------------------------------------
 **  Input:   index = link index
-**  Output:  linkType = link type (see EN_LinkType)
+**  Output:  type = link type (see EN_LinkType)
 **  Returns: error code
 **  Purpose: retrieves the type code of a link
 **----------------------------------------------------------------
@@ -3449,7 +3450,7 @@ int DLLEXPORT EN_setlinktype(EN_Project p, int *index, int linkType, int actionC
     char id1[MAXID + 1];
     char id2[MAXID + 1];
     int errcode;
-    int oldType;
+    EN_LinkType oldType;
 
     // Cannot modify network structure while solvers are active
     if (!p->Openflag) return 102;
@@ -4130,10 +4131,10 @@ int DLLEXPORT EN_setvertices(EN_Project p, int index, double *x, double *y, int 
 
 ********************************************************************/
 
-int DLLEXPORT EN_getpumptype(EN_Project p, int linkIndex, int *pumpType)
+int DLLEXPORT EN_getpumptype(EN_Project p, int linkIndex, EN_PumpType *pumpType)
 /*----------------------------------------------------------------
 **  Input:   linkIndex = index of a pump link
-**  Output:  pumpType = type of pump head curve (see EN_PumpType)
+**  Output:  type = type of pump head curve (see EN_PumpType)
 **  Returns: error code
 **  Purpose: retrieves the type of head curve used by a pump
 **----------------------------------------------------------------
@@ -4683,7 +4684,7 @@ int DLLEXPORT EN_getcurvelen(EN_Project p, int index, int *len)
     return 0;
 }
 
-int DLLEXPORT EN_getcurvetype(EN_Project p, int index, int *type)
+int DLLEXPORT EN_getcurvetype(EN_Project p, int index, EN_CurveType *type)
 /*----------------------------------------------------------------
 **  Input:   index = data curve index
 **  Output:  type = type of data curve (see EN_CurveType)
@@ -4975,8 +4976,8 @@ int DLLEXPORT EN_deletecontrol(EN_Project p, int index)
     return 0;
 }
 
-int DLLEXPORT EN_getcontrol(EN_Project p, int index, int *type, int *linkIndex,
-                            double *setting, int *nodeIndex, double *level)
+int DLLEXPORT EN_getcontrol(EN_Project p, int index, EN_ControlType *type,
+                int *linkIndex, double *setting, int *nodeIndex, double *level)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the control
 **  Output:  type = type of control (see EN_ControlType)
@@ -5298,9 +5299,9 @@ int DLLEXPORT EN_getruleID(EN_Project p, int index, char *id)
     return 0;
 }
 
-int DLLEXPORT EN_getpremise(EN_Project p, int ruleIndex, int premiseIndex,
-                           int *logop, int *object, int *objIndex, int *variable,
-                           int *relop, int *status, double *value)
+int  DLLEXPORT EN_getpremise(EN_Project p, int ruleIndex, int premiseIndex,
+               int *logop, EN_RuleObject *object, int *objIndex, EN_RuleVariable *variable,
+               EN_RuleOperator *relop, EN_RuleStatus *status, double *value)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
 **           premiseIndex = premise index
@@ -5337,8 +5338,8 @@ int DLLEXPORT EN_getpremise(EN_Project p, int ruleIndex, int premiseIndex,
 
 
 int DLLEXPORT EN_setpremise(EN_Project p, int ruleIndex, int premiseIndex,
-                            int logop, int object, int objIndex, int variable,
-                            int relop, int status, double value)
+              int logop, EN_RuleObject object, int objIndex, EN_RuleVariable variable,
+              EN_RuleOperator relop, EN_RuleStatus status, double value)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
 **           premiseIndex = premise index
@@ -5451,7 +5452,7 @@ int DLLEXPORT EN_setpremisevalue(EN_Project p, int ruleIndex, int premiseIndex, 
 }
 
 int DLLEXPORT EN_getthenaction(EN_Project p, int ruleIndex, int actionIndex,
-                               int *linkIndex, int *status, double *setting)
+                               int *linkIndex, EN_RuleStatus *status, double *setting)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
 **           actionIndex = index of a rule's THEN actions
@@ -5507,7 +5508,7 @@ int DLLEXPORT EN_setthenaction(EN_Project p, int ruleIndex, int actionIndex,
 }
 
 int DLLEXPORT EN_getelseaction(EN_Project p, int ruleIndex, int actionIndex,
-                               int *linkIndex, int *status, double *setting)
+                               int *linkIndex, EN_RuleStatus *status, double *setting)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
 **           actionIndex = index of a rule's ELSE actions

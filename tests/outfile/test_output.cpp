@@ -65,6 +65,7 @@ boost::test_tools::predicate_result check_string(std::string test, std::string r
 
 
 #define DATA_PATH_OUTPUT "./example1.out"
+#define DATA_PATH_FAIL   "./nooutput.out"
 
 //#define DATA_PATH_INP "./net1.inp"
 //#define DATA_PATH_RPT "./test.rpt"
@@ -91,6 +92,41 @@ BOOST_AUTO_TEST_CASE(OpenCloseTest) {
     BOOST_REQUIRE(error == 0);
 }
 
+BOOST_AUTO_TEST_CASE(getErrorTest){
+    char *err_msg = NULL;
+
+    ENR_getError(0, &err_msg);
+    BOOST_CHECK(err_msg == NULL);
+
+    ENR_getError(-1, &err_msg);
+    std::string test (err_msg);
+    std::string ref ("Error: An unknown error has occurred");
+    BOOST_CHECK(check_string(test, ref));
+
+    ENR_freeMemory(err_msg);
+}
+
+BOOST_AUTO_TEST_CASE(openErrorTest){
+    int error;
+    char *err_msg = NULL;
+    ENR_Handle p_handle = NULL;
+
+    error = ENR_createHandle(&p_handle);
+    BOOST_REQUIRE(error == 0);
+
+    error = ENR_openFile(p_handle, DATA_PATH_FAIL);
+    BOOST_CHECK(error == 434);
+    ENR_getError(error, &err_msg);
+
+    std::string test (err_msg);
+    std::string ref ("File Error 434: unable to open binary file");
+    BOOST_CHECK(check_string(test, ref));
+
+    ENR_freeMemory(err_msg);
+
+    error = ENR_deleteHandle(p_handle);
+    BOOST_REQUIRE(error == 0);
+}
 
 // // Test access to output file with the project open
 // BOOST_AUTO_TEST_CASE(AccessTest){

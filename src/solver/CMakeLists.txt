@@ -142,6 +142,14 @@ install(TARGETS epanet2
     FRAMEWORK  DESTINATION "${TOOL_DIST}"
     )
 
+# Install target import scripts so other cmake projects can use epanet libraries
+install(EXPORT epanet2Targets
+    DESTINATION
+        "${CONFIG_DIST}"
+    FILE
+        epanet2-config.cmake
+    )
+
 # Need to list files out individually otherwise it won't work
 install(
     FILES
