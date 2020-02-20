@@ -1,4 +1,3 @@
-//-----------------------------------------------------------------------------
 //
 //   epanet_output.c -- API for reading results from EPANET binary output file
 //
@@ -30,13 +29,11 @@
 //   functions automatically allocate memory for the array to be returned. The
 //   caller is responsible for deallocating memory using ENR_freeMemory().
 //
-//-----------------------------------------------------------------------------
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "shared/errormanager.h"
 #include "shared/filemanager.h"
 
 #include "epanet_output.h"
@@ -68,7 +65,6 @@ typedef struct Handle {
     F_OFF outputStartPos;  // starting file position of output data
     F_OFF bytesPerPeriod;  // bytes saved per simulation time period
 
-    error_handle_t *error_handle;
     file_handle_t *file_handle;
 } Handle, *ENR_Handle;
 
@@ -102,7 +98,6 @@ int EXPORT_OUT_API ENR_createHandle(ENR_Handle *p_handle)
     handle = (Handle *)calloc(1, sizeof(Handle));
 
     if (handle != NULL){
-        handle->error_handle = create_error_manager(&errorLookup);
         handle->file_handle = create_file_manager();
         *p_handle = handle;
     }
@@ -122,9 +117,7 @@ int EXPORT_OUT_API ENR_deleteHandle(ENR_Handle p_handle)
 
     else
     {
-        delete_error_manager(p_handle->error_handle);
         delete_file_manager(p_handle->file_handle);
-
         free(p_handle);
     }
 
@@ -185,7 +178,6 @@ int EXPORT_OUT_API ENR_openFile(ENR_Handle p_handle, const char *path)
     }
     // If error close the binary file
     if (errorcode > 400) {
-        set_error(p_handle->error_handle, errorcode);
         ENR_closeFile(p_handle);
     }
 
@@ -211,11 +203,8 @@ int EXPORT_OUT_API ENR_closeFile(ENR_Handle p_handle)
 
     if (p_handle == NULL || p_handle->file_handle == NULL)
         errorcode = -1;
-
     else
-    {
         close_file(p_handle->file_handle);
-    }
 
     return errorcode;
 }
@@ -241,7 +230,7 @@ int EXPORT_OUT_API ENR_getVersion(ENR_Handle p_handle, int *version)
             errorcode = 436;
     }
 
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getNetSize(ENR_Handle p_handle, int **elementCount, int *length)
@@ -269,7 +258,7 @@ int EXPORT_OUT_API ENR_getNetSize(ENR_Handle p_handle, int **elementCount, int *
         *length = NELEMENTTYPES;
     }
 
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes code, int *unitFlag)
@@ -343,7 +332,7 @@ int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes code, int *un
         default: errorcode = 421;
         }
     }
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getTimes(ENR_Handle p_handle, ENR_Time code, int *time)
@@ -388,7 +377,7 @@ int EXPORT_OUT_API ENR_getTimes(ENR_Handle p_handle, ENR_Time code, int *time)
             errorcode = 421;
         }
     }
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getChemData(ENR_Handle p_handle, char **name, int *length)
@@ -450,7 +439,7 @@ int EXPORT_OUT_API ENR_getElementName(ENR_Handle p_handle, ENR_ElementType type,
             strncpy(*name, temp, (*length + 1) * sizeof(char));
     }
 
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getEnergyUsage(ENR_Handle p_handle, int pumpIndex,
@@ -492,7 +481,7 @@ int EXPORT_OUT_API ENR_getEnergyUsage(ENR_Handle p_handle, int pumpIndex,
         *outValues = temp;
         *length = NENERGYRESULTS;
     }
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getNetReacts(ENR_Handle p_handle, float **outValues, int *length)
@@ -524,7 +513,7 @@ int EXPORT_OUT_API ENR_getNetReacts(ENR_Handle p_handle, float **outValues, int 
         *outValues = temp;
         *length = NREACTRESULTS;
     }
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 void EXPORT_OUT_API ENR_freeMemory(void *memory)
@@ -564,7 +553,7 @@ int EXPORT_OUT_API ENR_getNodeSeries(ENR_Handle p_handle, int nodeIndex, ENR_Nod
         *outValueSeries = temp;
         *dim = length;
     }
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getLinkSeries(ENR_Handle p_handle, int linkIndex, ENR_LinkAttribute attr,
@@ -596,7 +585,7 @@ int EXPORT_OUT_API ENR_getLinkSeries(ENR_Handle p_handle, int linkIndex, ENR_Lin
         *outValueSeries = temp;
         *dim = length;
     }
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getNodeAttribute(ENR_Handle p_handle, int periodIndex,
@@ -642,7 +631,7 @@ int EXPORT_OUT_API ENR_getNodeAttribute(ENR_Handle p_handle, int periodIndex,
         *length = p_handle->nodeCount;
     }
 
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getLinkAttribute(ENR_Handle p_handle, int periodIndex,
@@ -689,7 +678,7 @@ int EXPORT_OUT_API ENR_getLinkAttribute(ENR_Handle p_handle, int periodIndex,
         *length = p_handle->linkCount;
     }
 
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getNodeResult(ENR_Handle p_handle, int periodIndex,
@@ -716,7 +705,7 @@ int EXPORT_OUT_API ENR_getNodeResult(ENR_Handle p_handle, int periodIndex,
         *length = NNODERESULTS;
     }
 
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
 
 int EXPORT_OUT_API ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
@@ -740,21 +729,8 @@ int EXPORT_OUT_API ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
         *outValueArray = temp;
         *length = NLINKRESULTS;
     }
-    return set_error(p_handle->error_handle, errorcode);
+    return errorcode;;
 }
-
-//void EXPORT_OUT_API ENR_clearError(ENR_Handle p_handle)
-//{
-//    clear_error(p_handle->error_handle);
-//}
-
-//int EXPORT_OUT_API ENR_checkError(ENR_Handle p_handle, char **msg_buffer)
-//{
-//    if (p_handle == NULL) return -1;
-//
-//    return check_error(p_handle->error_handle, msg_buffer);
-//}
-
 
 int EXPORT_OUT_API ENR_getError(int err_code, char **err_msg)
 {

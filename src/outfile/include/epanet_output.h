@@ -303,24 +303,14 @@ void EXPORT_OUT_API ENR_freeMemory(void *memory);
 
 
 /**
-@brief Clears the current error status.
-@param p_handle an EPANET output handle
-*/
-//void EXPORT_OUT_API ENR_clearError(ENR_Handle p_handle);
-
-
-/**
 @brief Checks the current error status.
-@param p_handle an EPANET output handle
-@param[out] msg_buffer contains the message associated with the current error code.
-@return the current error code
+@param err_code is an EPANET error code.
+@param[out] err_msg contains the message associated with the current error code.
+@returns an error code
 
 This function allocates memory for the message buffer. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-//int EXPORT_OUT_API ENR_checkError(ENR_Handle p_handle, char **msg_buffer);
-
-
 int EXPORT_OUT_API ENR_getError(int err_code, char **err_msg);
 
 /**
