@@ -36,13 +36,13 @@ BOOST_FIXTURE_TEST_CASE(test_rprt_anlysstats, FixtureOpenClose)
 
 
     for (i=EN_ITERATIONS; i<=EN_MASSBALANCE; i++) {
-        error = EN_getstatistic(ph, i, array++);
+        error = EN_getstatistic(ph, (EN_AnalysisStatistic)i, array++);
         BOOST_REQUIRE(error == 0);
     }
     BOOST_CHECK(check_cdd_double(test, ref, 3));
 
     double temp;
-    error = EN_getstatistic(ph, 8, &temp);
+    error = EN_getstatistic(ph, (EN_AnalysisStatistic)8, &temp);
     BOOST_CHECK(error == 251);
 }
 

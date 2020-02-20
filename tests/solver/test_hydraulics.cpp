@@ -27,13 +27,12 @@ BOOST_FIXTURE_TEST_CASE(test_solveH, FixtureOpenClose)
 
 BOOST_FIXTURE_TEST_CASE(test_hyd_step, FixtureOpenClose)
 {
-    int flag = 00;
     long t, tstep;
 
     error = EN_openH(ph);
     BOOST_REQUIRE(error == 0);
 
-    error = EN_initH(ph, flag);
+    error = EN_initH(ph, EN_NOSAVE);
     BOOST_REQUIRE(error == 0);
 
     do {

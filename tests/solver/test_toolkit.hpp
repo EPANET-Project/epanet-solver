@@ -64,7 +64,6 @@ struct FixtureAfterStep{
         error = 0;
         ph = NULL;
 
-        flag = 0;
         tstop = 10800;
 
         EN_createproject(&ph);
@@ -76,7 +75,7 @@ struct FixtureAfterStep{
         error = EN_openQ(ph);
         BOOST_REQUIRE(error == 0);
 
-        error = EN_initQ(ph, flag);
+        error = EN_initQ(ph, EN_NOSAVE);
         BOOST_REQUIRE(error == 0);
 
         do {
