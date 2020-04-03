@@ -484,7 +484,7 @@ Pdemand finddemand(Pdemand d, int index)
     return d;
 }
 
-int adddemand(Snode *node, double dbase, int dpat, char *dname)
+int adddemand(Snode *node, double dbase, int dpat, const char *dname)
 /*----------------------------------------------------------------
 **  Input:   node = a network junction node
 **           dbase = base demand value

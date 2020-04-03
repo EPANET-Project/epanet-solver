@@ -1045,7 +1045,7 @@ These functions are used to manage a project.
   that no time pattern or category name is associated with the demand.
   */
   int DLLEXPORT EN_adddemand(EN_Project ph, int nodeIndex, double baseDemand,
-                char *demandPattern, char *demandName);
+                const char *demandPattern, const char *demandName);
 
   /**
   @brief deletes a demand from a junction node.
@@ -1064,7 +1064,7 @@ These functions are used to manage a project.
   @param[out] demandIndex the index of the demand being sought
   @return an error code
   */
-  int DLLEXPORT EN_getdemandindex(EN_Project ph, int nodeIndex, char *demandName,
+  int DLLEXPORT EN_getdemandindex(EN_Project ph, int nodeIndex, const char *demandName,
                 int *demandIndex);
 
   /**
@@ -1147,7 +1147,7 @@ These functions are used to manage a project.
 
   The category name must contain no more than @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int DLLEXPORT EN_setdemandname(EN_Project ph, int nodeIndex, int demandIdx, char *demandName);
+  int DLLEXPORT EN_setdemandname(EN_Project ph, int nodeIndex, int demandIdx, const char *demandName);
 
   /**
   @}
@@ -1432,7 +1432,7 @@ These functions are used to manage a project.
   @param[out] index the time pattern's index (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_getpatternindex(EN_Project ph, char *id, int *index);
+  int  DLLEXPORT EN_getpatternindex(EN_Project ph, const char *id, int *index);
 
   /**
   @brief Retrieves the ID name of a time pattern given its index.

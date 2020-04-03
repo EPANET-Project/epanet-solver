@@ -1849,7 +1849,7 @@ int  DLLEXPORT EN_setqualtype(EN_Project ph, EN_QualityType qualType, char *chem
     strncpy(node->ID, id, MAXID);
 
     // set default values for new node
-    node->Type = nodeType;
+    node->Type = (NodeType)nodeType;
     node->El = 0;
     node->S = NULL;
     node->C0 = 0;
@@ -2780,7 +2780,7 @@ int DLLEXPORT EN_setdemandmodel(EN_Project ph, EN_DemandModel model, double pmin
 }
 
 int  DLLEXPORT EN_adddemand(EN_Project ph, int nodeIndex, double baseDemand,
-                            char *demandPattern, char *demandName)
+                            const char *demandPattern, const char *demandName)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
 **           baseDemand = baseline demand value
@@ -2867,7 +2867,7 @@ int DLLEXPORT EN_deletedemand(EN_Project ph, int nodeIndex, int demandIndex)
     return 0;
 }
 
-int DLLEXPORT EN_getdemandindex(EN_Project ph, int nodeIndex, char *demandName,
+int DLLEXPORT EN_getdemandindex(EN_Project ph, int nodeIndex, const char *demandName,
                                 int *demandIndex)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
@@ -3016,7 +3016,7 @@ int DLLEXPORT EN_getdemandname(EN_Project ph, int nodeIndex, int demandIndex,
 }
 
 int DLLEXPORT EN_setdemandname(EN_Project ph, int nodeIndex, int demandIndex,
-                               char *demandName)
+                               const char *demandName)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
 **           demandIndex = demand category index
@@ -3201,7 +3201,7 @@ int DLLEXPORT EN_addlink(EN_Project ph, char *id, EN_LinkType linkType,
         net->Valve[net->Nvalves].Link = n;
     }
 
-    link->Type = linkType;
+    link->Type = (LinkType)linkType;
     link->N1 = n1;
     link->N2 = n2;
     link->Status = OPEN;
@@ -3426,7 +3426,7 @@ int DLLEXPORT EN_getlinktype(EN_Project ph, int index, EN_LinkType *linkType)
     *linkType = -1;
     if (!ph->Openflag) return 102;
     if (index < 1 || index > ph->network.Nlinks) return 204;
-    *linkType = ph->network.Link[index].Type;
+    *linkType = (EN_LinkType)ph->network.Link[index].Type;
     return 0;
 }
 
@@ -3481,7 +3481,7 @@ int DLLEXPORT EN_setlinktype(EN_Project ph, int *index, EN_LinkType linkType, EN
     // Pipe changing from or to having a check valve
     if (oldType <= PIPE && linkType <= PIPE)
     {
-        net->Link[i].Type = linkType;
+        net->Link[i].Type = (LinkType)linkType;
         if (linkType == CVPIPE) net->Link[i].Status = OPEN;
         return 0;
     }
@@ -4336,7 +4336,7 @@ int  DLLEXPORT EN_deletepattern(EN_Project ph, int index)
     return 0;
 }
 
-int DLLEXPORT EN_getpatternindex(EN_Project ph, char *id, int *index)
+int DLLEXPORT EN_getpatternindex(EN_Project ph, const char *id, int *index)
 /*----------------------------------------------------------------
 **  Input:   id = time pattern name
 **  Output:  index = time pattern index
@@ -4697,7 +4697,7 @@ int DLLEXPORT EN_getcurvetype(EN_Project ph, int index, EN_CurveType *type)
     Network *net = &ph->network;
     if (!ph->Openflag) return 102;
     if (index < 1 || index > net->Ncurves) return 206;
-    *type = net->Curve[index].Type;
+    *type = (EN_CurveType)net->Curve[index].Type;
     return 0;
 }
 
@@ -5012,7 +5012,7 @@ int DLLEXPORT EN_getcontrol(EN_Project ph, int index, EN_ControlType *type,
 
     // Retrieve control's type and link index
     control = &net->Control[index];
-    *type = control->Type;
+    *type = (EN_ControlType)control->Type;
     *linkIndex = control->Link;
 
     // Retrieve control's setting

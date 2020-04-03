@@ -14,7 +14,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 
-#include "test_toolkit.hpp"
+#include "test_solver.hpp"
 
 
 BOOST_AUTO_TEST_SUITE (test_hydraulics)

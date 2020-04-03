@@ -2,7 +2,7 @@
  ******************************************************************************
  Project:      OWA EPANET
  Version:      2.2
- Module:       test_toolkit.hpp
+ Module:       test_solver.hpp
  Description:  Tests EPANET toolkit api functions
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
@@ -11,8 +11,8 @@
  ******************************************************************************
 */
 
-#ifndef TEST_TOOLKIT_HPP
-#define TEST_TOOLKIT_HPP
+#ifndef TEST_SOLVER_HPP
+#define TEST_SOLVER_HPP
 
 #include "epanet2_2.h"
 
@@ -21,6 +21,7 @@
 #define DATA_PATH_TMP "./tmp.inp"
 #define DATA_PATH_RPT "./test.rpt"
 #define DATA_PATH_OUT "./test.out"
+
 
 struct FixtureOpenClose{
     FixtureOpenClose() {
@@ -126,4 +127,4 @@ boost::test_tools::predicate_result check_cdd_double(std::vector<double>& test,
 boost::test_tools::predicate_result check_string(std::string test, std::string ref);
 
 
-#endif //TEST_TOOLKIT_HPP
+#endif //TEST_SOLVER_HPP
