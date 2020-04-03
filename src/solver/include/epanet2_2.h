@@ -119,7 +119,7 @@ These functions are used to manage a project.
   file will not be used to supply network data. If the project receives it's network data
   from an input file then there is no need to call this function.
   */
-  int DLLEXPORT EN_init(EN_Project ph, const char *rptFile, const char *outFile,
+  int DLLEXPORT EN_init(EN_Project p, const char *rptFile, const char *outFile,
                 EN_FlowUnits unitsType, int headLossType);
 
   /**
