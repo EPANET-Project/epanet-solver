@@ -14,7 +14,7 @@ set(EPANET_OUT_PUBLIC_HEADERS
     include/epanet_output.h
     include/epanet_output_enums.h
     include/epanet_output_export.h
-    )
+)
 
 
 # the binary output file API
@@ -22,7 +22,7 @@ add_library(epanet-output
     SHARED
         epanet_output.c
         $<TARGET_OBJECTS:shared_objs>
-    )
+)
 
 target_include_directories(epanet-output
     PUBLIC
@@ -30,27 +30,44 @@ target_include_directories(epanet-output
         $<INSTALL_INTERFACE:${INCLUDE_DIST}>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/..
-    )
+)
+
+set_target_properties(epanet-output
+    PROPERTIES
+        MACOSX_RPATH TRUE
+        SKIP_BUILD_RPATH FALSE
+        BUILD_WITH_INSTALL_RPATH FALSE
+        INSTALL_RPATH "@loader_path"
+        INSTALL_RPATH_USE_LINK_PATH FALSE
+)
 
 include(GenerateExportHeader)
 generate_export_header(epanet-output
-    BASE_NAME epanet_output
-    EXPORT_MACRO_NAME EXPORT_OUT_API
-    EXPORT_FILE_NAME epanet_output_export.h
-    STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC
-    )
+    BASE_NAME
+        epanet_output
+    EXPORT_MACRO_NAME
+        EXPORT_OUT_API
+    EXPORT_FILE_NAME
+        epanet_output_export.h
+    STATIC_DEFINE
+        SHARED_EXPORTS_BUILT_AS_STATIC
+)
 
 file(COPY ${CMAKE_CURRENT_BINARY_DIR}/epanet_output_export.h
     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include
-    )
+)
 
 
-install(TARGETS epanet-output EXPORT epanet-outputTargets
-    RUNTIME    DESTINATION "${TOOL_DIST}"
-    LIBRARY    DESTINATION "${TOOL_DIST}"
-    ARCHIVE    DESTINATION "${LIBRARY_DIST}"
-    FRAMEWORK  DESTINATION "${TOOL_DIST}"
-    )
+install(TARGETS epanet-output
+    EXPORT
+        epanet-outputTargets
+    RUNTIME
+        DESTINATION "${TOOL_DIST}"
+    LIBRARY
+        DESTINATION "${LIBRARY_DIST}"
+    ARCHIVE
+        DESTINATION "${LIBRARY_DIST}"
+)
 
 # Install target import scripts so other cmake projects can use epanet libraries
 install(EXPORT epanet-outputTargets
@@ -58,9 +75,12 @@ install(EXPORT epanet-outputTargets
         "${CONFIG_DIST}"
     FILE
         epanet-output-config.cmake
-    )
+)
 
-install(FILES ${EPANET_OUT_PUBLIC_HEADERS} DESTINATION "${INCLUDE_DIST}")
+install(FILES ${EPANET_OUT_PUBLIC_HEADERS}
+    DESTINATION
+        "${INCLUDE_DIST}"
+)
 
 
 # copy epanet-output to build tree for testing
@@ -69,5 +89,5 @@ if(BUILD_TESTS)
         COMMAND ${CMAKE_COMMAND} -E copy
             $<TARGET_FILE:epanet-output>
             ${CMAKE_BINARY_DIR}/bin/$<CONFIGURATION>/$<TARGET_FILE_NAME:epanet-output>
-        )
+    )
 endif()

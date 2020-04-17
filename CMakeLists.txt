@@ -57,7 +57,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 # Define install locations (will be prepended by install prefix)
-set(TOOL_DIST "bin")
+set(TOOL_DIST    "bin")
 set(INCLUDE_DIST "include")
 set(LIBRARY_DIST "lib")
 set(CONFIG_DIST  "cmake")
