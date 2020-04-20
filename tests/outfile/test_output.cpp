@@ -64,7 +64,7 @@ boost::test_tools::predicate_result check_string(std::string test, std::string r
 }
 
 
-#define DATA_PATH_OUTPUT "./example1.out"
+#define DATA_PATH_OUTPUT "./test_example1.out"
 #define DATA_PATH_FAIL   "./nooutput.out"
 
 //#define DATA_PATH_INP "./net1.inp"

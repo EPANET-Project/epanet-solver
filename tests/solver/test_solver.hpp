@@ -17,7 +17,7 @@
 #include "epanet2_2.h"
 
 
-#define DATA_PATH_NET1 "./net1.inp"
+#define DATA_PATH_NET1 "./test_net1.inp"
 #define DATA_PATH_TMP "./tmp.inp"
 #define DATA_PATH_RPT "./test.rpt"
 #define DATA_PATH_OUT "./test.out"

@@ -226,9 +226,10 @@ temp/
 
 # Testing Stuff
 nrtests*/
-tests/data/
-tests/outfile/data/
-tests/solver/data/
+tests/data/*
+tests/outfile/data/*
+tests/solver/data/*
+!test_*.*
 
 
 #Cmake stuff
