@@ -77,10 +77,10 @@ BOOST_AUTO_TEST_CASE(test_save)
     error = EN_open(ph_save, DATA_PATH_NET1, DATA_PATH_RPT, DATA_PATH_OUT);
     BOOST_REQUIRE(error == 0);
 
-    error = EN_saveinpfile(ph_save, "test_reopen.inp");
+    error = EN_saveinpfile(ph_save, "reopen.inp");
     BOOST_REQUIRE(error == 0);
 
-    BOOST_CHECK(boost::filesystem::exists("test_reopen.inp") == true);
+    BOOST_CHECK(boost::filesystem::exists("reopen.inp") == true);
 
     error = EN_close(ph_save);
     BOOST_REQUIRE(error == 0);
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(test_reopen, * boost::unit_test::depends_on("test_project/t
     EN_Project ph_reopen;
 
     EN_createproject(&ph_reopen);
-	error = EN_open(ph_reopen, "test_reopen.inp", DATA_PATH_RPT, DATA_PATH_OUT);
+	error = EN_open(ph_reopen, "reopen.inp", DATA_PATH_RPT, DATA_PATH_OUT);
     BOOST_REQUIRE(error == 0);
 
     error = EN_close(ph_reopen);

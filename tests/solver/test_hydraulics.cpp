@@ -65,15 +65,15 @@ BOOST_FIXTURE_TEST_CASE(test_hydr_savefile, FixtureOpenClose)
     error = EN_solveH(ph);
     BOOST_REQUIRE(error == 0);
 
-    error = EN_savehydfile(ph, "test_savefile.hyd");
+    error = EN_savehydfile(ph, "savefile.hyd");
     BOOST_REQUIRE(error == 0);
 
-    BOOST_CHECK(boost::filesystem::exists("test_savefile.hyd") == true);
+    BOOST_CHECK(boost::filesystem::exists("savefile.hyd") == true);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_hydr_usefile, FixtureOpenClose, * boost::unit_test::depends_on("test_hydraulics/test_hydr_savefile"))
 {
-    error = EN_usehydfile(ph, "test_savefile.hyd");
+    error = EN_usehydfile(ph, "savefile.hyd");
     BOOST_REQUIRE(error == 0);
 
     error = EN_solveQ(ph);
