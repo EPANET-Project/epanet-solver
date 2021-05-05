@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_SUITE(test_net_builder)
 
 BOOST_FIXTURE_TEST_CASE(test_build_net1, FixtureInitClose)
 {
-    int flag = 00;
+    //int flag = 00;
     long t, tstep;
     int i, ind, Lindex, Nindex, Cindex;
     double h_build;
@@ -226,7 +226,7 @@ BOOST_FIXTURE_TEST_CASE(test_build_net1, FixtureInitClose)
 
     error = EN_openH(ph);
     BOOST_REQUIRE(error == 0);
-    error = EN_initH(ph, 0);
+    error = EN_initH(ph, EN_NOSAVE);
     BOOST_REQUIRE(error == 0);
     do {
         error = EN_runH(ph, &t);
@@ -247,10 +247,10 @@ BOOST_FIXTURE_TEST_CASE(test_build_net1, FixtureInitClose)
 BOOST_AUTO_TEST_CASE(test_open_net1, * boost::unit_test::depends_on("test_net_builder/test_build_net1"))
 {
     int error = 0;
-    int flag = 00;
     long t, tstep;
     int Nindex = -1;
-    double h_orig = 0.0, h_build = 0.0, h_build_loaded = 0.0;
+    //double h_orig = 0.0, h_build = 0.0;
+    double h_build_loaded = 0.0;
 
 
     EN_Project ph = NULL;
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(test_open_net1, * boost::unit_test::depends_on("test_net_bu
     error = EN_openH(ph);
     BOOST_REQUIRE(error == 0);
 
-    error = EN_initH(ph, flag);
+    error = EN_initH(ph, EN_NOSAVE);
     BOOST_REQUIRE(error == 0);
 
     do {

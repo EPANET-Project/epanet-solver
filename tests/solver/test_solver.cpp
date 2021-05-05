@@ -17,7 +17,7 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-#include "test_toolkit.hpp"
+#include "test_solver.hpp"
 
 
 // Custom test to check the minimum number of correct decimal digits between

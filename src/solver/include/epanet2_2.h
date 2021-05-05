@@ -1,4 +1,8 @@
-/*
+/** @file epanet2_2.h
+ @see http://github.com/openwateranalytics/epanet
+ */
+
+ /*
  ******************************************************************************
  Project:      OWA EPANET
  Version:      2.2
@@ -10,11 +14,6 @@
  Last Updated: 10/29/2019
  ******************************************************************************
  */
-
- /** @file epanet2_2.h
-  @see http://github.com/openwateranalytics/epanet
-  */
-
 
 #ifndef EPANET2_2_H
 #define EPANET2_2_H
@@ -120,8 +119,8 @@ These functions are used to manage a project.
   file will not be used to supply network data. If the project receives it's network data
   from an input file then there is no need to call this function.
   */
-  int DLLEXPORT EN_init(EN_Project ph, const char *rptFile, const char *outFile,
-                int unitsType, int headLossType);
+  int DLLEXPORT EN_init(EN_Project p, const char *rptFile, const char *outFile,
+                EN_FlowUnits unitsType, int headLossType);
 
   /**
   @brief Opens an EPANET input file & reads in network data.
@@ -140,12 +139,12 @@ These functions are used to manage a project.
   /**
   @brief Retrieves the title lines of the project
   @param ph an EPANET project handle.
-  @param[out] line1 first title line
-  @param[out] line2 second title line
-  @param[out] line3 third title line
+  @param[out] out_line1 first title line
+  @param[out] out_line2 second title line
+  @param[out] out_line3 third title line
   @return an error code
   */
-  int  DLLEXPORT EN_gettitle(EN_Project ph, char *line1, char *line2, char *line3);
+  int  DLLEXPORT EN_gettitle(EN_Project ph, char *out_line1, char *out_line2, char *out_line3);
 
   /**
   @brief Sets the title lines of the project
@@ -160,22 +159,22 @@ These functions are used to manage a project.
   /**
   @brief Retrieves a descriptive comment assigned to a Node, Link, Pattern or Curve.
   @param ph an EPANET project handle.
-  @param object a type of object (either EN_NODE, EN_LINK, EN_TIMEPAT or EN_CURVE)
+  @param object is an EN_ObjectType (either EN_NODE, EN_LINK, EN_TIMEPAT or EN_CURVE)
   @param index the object's index starting from 1
-  @param[out] comment the comment string assigned to the object
+  @param[out] out_comment the comment string assigned to the object
   @return an error code
   */
-  int  DLLEXPORT EN_getcomment(EN_Project ph, int object, int index, char *comment);
+  int  DLLEXPORT EN_getcomment(EN_Project ph, EN_ObjectType object, int index, char *out_comment);
 
   /**
   @brief Assigns a descriptive comment to a Node, Link, Pattern or Curve.
   @param ph an EPANET project handle.
-  @param object a type of object (either EN_NODE, EN_LINK, EN_TIMEPAT or EN_CURVE)
+  @param object is an EN_ObjectType (either EN_NODE, EN_LINK, EN_TIMEPAT or EN_CURVE)
   @param index the object's index starting from 1
   @param[out] comment the comment string assigned to the object
   @return an error code
   */
-  int  DLLEXPORT EN_setcomment(EN_Project ph, int object, int index, char *comment);
+  int  DLLEXPORT EN_setcomment(EN_Project ph, EN_ObjectType object, int index, char *comment);
 
   /**
   @brief Retrieves the number of objects of a given type in a project.
@@ -184,7 +183,7 @@ These functions are used to manage a project.
   @param[out] count number of objects of the specified type
   @return an error code
   */
-  int  DLLEXPORT EN_getcount(EN_Project ph, int object, int *count);
+  int  DLLEXPORT EN_getcount(EN_Project ph, EN_CountType object, int *count);
 
   /**
   @brief Saves a project's data to an EPANET-formatted text file.
@@ -283,7 +282,7 @@ These functions are used to manage a project.
   /**
   @brief Initializes a network prior to running a hydraulic analysis.
   @param ph an EPANET project handle.
-  @param initFlag a 2-digit initialization flag (see @ref EN_InitHydOption).
+  @param initFlag a 2-digit initialization flag (see @ref EN_SaveInitOptions).
   @return an error code.
 
   This function initializes storage tank levels, link status and settings, and
@@ -306,7 +305,7 @@ These functions are used to manage a project.
   process hydraulic results as they are generated using the functions ::EN_getnodevalue
   and ::EN_getlinkvalue.
   */
-  int DLLEXPORT EN_initH(EN_Project ph, int initFlag);
+  int DLLEXPORT EN_initH(EN_Project ph, EN_SaveInitOptions initFlag);
 
   /**
   @brief Computes a hydraulic solution for the current point in time.
@@ -452,8 +451,8 @@ These functions are used to manage a project.
   /**
   @brief Initializes a network prior to running a water quality analysis.
   @param ph an EPANET project handle.
-  @param saveFlag set to \b EN_SAVE (1) if results are to be saved to the project's
-  binary output file, or to \b EN_NOSAVE (0) if not.
+  @param saveFlag is an EN_SaveInitOptions type  set to \b EN_SAVE (1) if results are
+  to be saved to the project's binary output file, or to \b EN_NOSAVE (0) if not.
   @return an error code.
 
   Call ::EN_initQ prior to running a water quality analysis using ::EN_runQ in
@@ -463,7 +462,7 @@ These functions are used to manage a project.
 
   Do not call ::EN_initQ if a complete water quality analysis will be made using ::EN_solveQ.
   */
-  int DLLEXPORT EN_initQ(EN_Project ph, int saveFlag);
+  int DLLEXPORT EN_initQ(EN_Project ph, EN_SaveInitOptions saveFlag);
 
   /**
   @brief Makes hydraulic and water quality results at the start of the current time
@@ -653,7 +652,7 @@ These functions are used to manage a project.
   If many hydraulic analyses will be run in the application it is recommended that
   status reporting be turned off (<b>level = EN_NO_REPORT</b>).
   */
-  int  DLLEXPORT EN_setstatusreport(EN_Project ph, int level);
+  int  DLLEXPORT EN_setstatusreport(EN_Project ph, EN_StatusReport level);
 
   /**
   @brief Retrieves the toolkit API version number.
@@ -668,13 +667,13 @@ These functions are used to manage a project.
   /**
   @brief Returns the text of an error message generated by an error code.
   @param errcode an error code.
-  @param[out] errmsg the error message generated by the error code
+  @param[out] out_errmsg the error message generated by the error code
   @param maxLen maximum number of characters that errmsg can hold
   @return an error code
 
   Error message strings should be at least @ref EN_SizeLimits "EN_MAXMSG" characters in length.
   */
-  int  DLLEXPORT EN_geterror(int errcode, char *errmsg, int maxLen);
+  int  DLLEXPORT EN_geterror(int errcode, char *out_errmsg, int maxLen);
 
   /**
   @brief Retrieves a particular simulation statistic.
@@ -683,12 +682,12 @@ These functions are used to manage a project.
   @param[out] value the value of the statistic.
   @return an error code
   */
-  int  DLLEXPORT EN_getstatistic(EN_Project ph, int type, double* value);
+  int  DLLEXPORT EN_getstatistic(EN_Project ph, EN_AnalysisStatistic type , double* value);
 
   /**
   @brief Retrieves the order in which a node or link appears in an @ref OutFile "output file".
   @param ph an EPANET project handle.
-  @param type a type of element (either @ref EN_NODE or @ref EN_LINK).
+  @param type is an EN_ObjectType (either @ref EN_NODE or @ref EN_LINK).
   @param index the element's current index (starting from 1).
   @param[out] value the order in which the element's results were written to file.
   @return an error code.
@@ -699,7 +698,7 @@ These functions are used to manage a project.
   after the order of nodes or links in a network's database has been changed due to editing
   operations.
   */
-  int  DLLEXPORT EN_getresultindex(EN_Project ph, int type, int index, int *value);
+  int  DLLEXPORT EN_getresultindex(EN_Project ph, EN_ObjectType type, int index, int *value);
 
   /**
   @}
@@ -726,7 +725,7 @@ These functions are used to manage a project.
   @param[out] value the current value of the option.
   @return an error code
   */
-  int  DLLEXPORT EN_getoption(EN_Project ph, int option, double *value);
+  int  DLLEXPORT EN_getoption(EN_Project ph, EN_Option option, double *value);
 
   /**
   @brief Sets the value for an anlysis option.
@@ -736,7 +735,7 @@ These functions are used to manage a project.
   @return an error code.
   @see EN_Option
   */
-  int  DLLEXPORT EN_setoption(EN_Project ph, int option, double value);
+  int  DLLEXPORT EN_setoption(EN_Project ph, EN_Option option, double value);
 
   /**
   @brief Retrieves a project's flow units.
@@ -747,7 +746,7 @@ These functions are used to manage a project.
   Flow units in liters or cubic meters implies that SI metric units are used for all
   other quantities in addition to flow. Otherwise US Customary units are employed.
   */
-  int  DLLEXPORT EN_getflowunits(EN_Project ph, int *units);
+  int  DLLEXPORT EN_getflowunits(EN_Project ph, EN_FlowUnits *units);
 
   /**
   @brief Sets a project's flow units.
@@ -758,7 +757,7 @@ These functions are used to manage a project.
   Flow units in liters or cubic meters implies that SI metric units are used for all
   other quantities in addition to flow. Otherwise US Customary units are employed.
   */
-  int  DLLEXPORT EN_setflowunits(EN_Project ph, int units);
+  int  DLLEXPORT EN_setflowunits(EN_Project ph, EN_FlowUnits units);
 
   /**
   @brief Retrieves the value of a time parameter.
@@ -767,7 +766,7 @@ These functions are used to manage a project.
   @param[out] value the current value of the time parameter (in seconds).
   @return an error code.
   */
-  int  DLLEXPORT EN_gettimeparam(EN_Project ph, int param, long *value);
+  int  DLLEXPORT EN_gettimeparam(EN_Project ph, EN_TimeParameter param, long *value);
 
   /**
   @brief Sets the value of a time parameter.
@@ -776,7 +775,7 @@ These functions are used to manage a project.
   @param value the new value of the time parameter (in seconds)
   @return an error code.
   */
-  int  DLLEXPORT EN_settimeparam(EN_Project ph, int param, long value);
+  int  DLLEXPORT EN_settimeparam(EN_Project ph, EN_TimeParameter param, long value);
 
   /**
   @brief Gets information about the type of water quality analysis requested.
@@ -787,8 +786,8 @@ These functions are used to manage a project.
   @param[out] traceNode index of the node being traced (if applicable).
   @return an error code.
   */
-  int  DLLEXPORT EN_getqualinfo(EN_Project ph, int *qualType, char *chemName,
-                 char *chemUnits, int *traceNode);
+  int  DLLEXPORT EN_getqualinfo(EN_Project ph, EN_QualityType *qualType, char *out_chemName,
+                 char *out_chemUnits, int *traceNode);
 
   /**
   @brief Retrieves the type of water quality analysis to be run.
@@ -797,7 +796,7 @@ These functions are used to manage a project.
   @param[out] traceNode the index of node being traced, if <b>qualType = EN_TRACE</b>.
   @return an error code.
   */
-  int  DLLEXPORT EN_getqualtype(EN_Project ph, int *qualType, int *traceNode);
+  int  DLLEXPORT EN_getqualtype(EN_Project ph, EN_QualityType *qualType, int *traceNode);
 
   /**
   @brief Sets the type of water quality analysis to run.
@@ -813,7 +812,7 @@ These functions are used to manage a project.
 
   Note that the trace node is specified by ID name and not by index.
   */
-  int  DLLEXPORT EN_setqualtype(EN_Project ph, int qualType, char *chemName,
+  int  DLLEXPORT EN_setqualtype(EN_Project ph, EN_QualityType qualType, char *chemName,
       char *chemUnits, char *traceNode);
 
   /**
@@ -838,19 +837,19 @@ These functions are used to manage a project.
   @brief Adds a new node to a project.
   @param ph an EPANET project handle.
   @param id the ID name of the node to be added.
-  @param nodeType the type of node being added (see @ref EN_NodeType)
+  @param in_enum the type of node being added (see @ref EN_NodeType)
   @param[out] index the index of the newly added node
   @return an error code.
 
   When a new node is created all of its properties (see @ref EN_NodeProperty) are set to 0.
   */
-  int DLLEXPORT EN_addnode(EN_Project ph, char *id, int nodeType, int *index);
+  int DLLEXPORT EN_addnode(EN_Project ph, char *id, EN_NodeType nodeType, int *index);
 
   /**
   @brief Deletes a node from a project.
   @param ph an EPANET project handle.
   @param index the index of the node to be deleted.
-  @param actionCode the action taken if any control contains the node and its links.
+  @param actionCode the action taken if any control contains the node and its links (see @ref EN_ActionCodeType).
   @return an error code.
 
   If \b actionCode is \b EN_UNCONDITIONAL then the node, its incident links and all
@@ -859,7 +858,7 @@ These functions are used to manage a project.
   in any controls and error code 261 is returned.
 
   */
-  int DLLEXPORT EN_deletenode(EN_Project ph, int index, int actionCode);
+  int DLLEXPORT EN_deletenode(EN_Project ph, int index, EN_ActionCodeType actionCode);
 
   /**
   @brief Gets the index of a node given its ID name.
@@ -874,12 +873,12 @@ These functions are used to manage a project.
   @brief Gets the ID name of a node given its index.
   @param ph an EPANET project handle.
   @param index a node's index (starting from 1).
-  @param[out] id the node's ID name.
+  @param[out] out_id the node's ID name.
   @return an error code
 
   The ID name must be sized to hold at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getnodeid(EN_Project ph, int index, char *id);
+  int  DLLEXPORT EN_getnodeid(EN_Project ph, int index, char *out_id);
 
   /**
   @brief Changes the ID name of a node.
@@ -899,7 +898,7 @@ These functions are used to manage a project.
   @param[out] nodeType the node's type (see @ref EN_NodeType).
   @return an error code.
   */
-  int  DLLEXPORT EN_getnodetype(EN_Project ph, int index, int *nodeType);
+  int  DLLEXPORT EN_getnodetype(EN_Project ph, int index, EN_NodeType *nodeType);
 
   /**
   @brief Retrieves a property value for a node.
@@ -912,7 +911,7 @@ These functions are used to manage a project.
   Values are returned in units that depend on the units used for flow rate
   (see @ref Units).
   */
-  int  DLLEXPORT EN_getnodevalue(EN_Project ph, int index, int property, double *value);
+  int  DLLEXPORT EN_getnodevalue(EN_Project ph, int index, EN_NodeProperty property, double *value);
 
   /**
   @brief Sets a property value for a node.
@@ -924,7 +923,7 @@ These functions are used to manage a project.
 
   Values are in units that depend on the units used for flow rate (see @ref Units).
   */
-  int  DLLEXPORT EN_setnodevalue(EN_Project ph, int index, int property, double value);
+  int  DLLEXPORT EN_setnodevalue(EN_Project ph, int index, EN_NodeProperty property, double value);
 
   /**
   @brief Sets a group of properties for a junction node.
@@ -1007,7 +1006,7 @@ These functions are used to manage a project.
 
   Parameters <b>pmin, preq,</b> and \b pexp are only used when the demand model is \b EN_PDA.
   */
-  int DLLEXPORT EN_getdemandmodel(EN_Project ph, int *type, double *pmin,
+  int DLLEXPORT EN_getdemandmodel(EN_Project ph, EN_DemandModel *type, double *pmin,
                 double *preq, double *pexp);
 
   /**
@@ -1029,7 +1028,7 @@ These functions are used to manage a project.
   demand reductions needed to insure that no node delivers positive demand at a pressure
   below \b pmin.
   */
-  int DLLEXPORT EN_setdemandmodel(EN_Project ph, int type, double pmin,
+  int DLLEXPORT EN_setdemandmodel(EN_Project ph, EN_DemandModel type, double pmin,
                 double preq, double pexp);
 
 
@@ -1046,7 +1045,7 @@ These functions are used to manage a project.
   that no time pattern or category name is associated with the demand.
   */
   int DLLEXPORT EN_adddemand(EN_Project ph, int nodeIndex, double baseDemand,
-                char *demandPattern, char *demandName);
+                const char *demandPattern, const char *demandName);
 
   /**
   @brief deletes a demand from a junction node.
@@ -1065,7 +1064,7 @@ These functions are used to manage a project.
   @param[out] demandIndex the index of the demand being sought
   @return an error code
   */
-  int DLLEXPORT EN_getdemandindex(EN_Project ph, int nodeIndex, char *demandName,
+  int DLLEXPORT EN_getdemandindex(EN_Project ph, int nodeIndex, const char *demandName,
                 int *demandIndex);
 
   /**
@@ -1131,12 +1130,12 @@ These functions are used to manage a project.
   @param ph an EPANET project handle.
   @param nodeIndex a node's index (starting from 1).
   @param demandIndex the index of one of the node's demand categories (starting from 1).
-  @param[out] demandName The name of the selected category.
+  @param[out] out_demandName The name of the selected category.
   @return an error code.
 
   \b demandName must be sized to contain at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int DLLEXPORT EN_getdemandname(EN_Project ph, int nodeIndex, int demandIndex, char *demandName);
+  int DLLEXPORT EN_getdemandname(EN_Project ph, int nodeIndex, int demandIndex, char *out_demandName);
 
   /**
   @brief Assigns a name to a node's demand category.
@@ -1148,7 +1147,7 @@ These functions are used to manage a project.
 
   The category name must contain no more than @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int DLLEXPORT EN_setdemandname(EN_Project ph, int nodeIndex, int demandIdx, char *demandName);
+  int DLLEXPORT EN_setdemandname(EN_Project ph, int nodeIndex, int demandIdx, const char *demandName);
 
   /**
   @}
@@ -1193,7 +1192,7 @@ These functions are used to manage a project.
 
   See @ref EN_LinkProperty.
   */
-  int DLLEXPORT EN_addlink(EN_Project ph, char *id, int linkType, char *fromNode,
+  int DLLEXPORT EN_addlink(EN_Project ph, char *id, EN_LinkType linkType, char *fromNode,
                           char *toNode, int *index);
 
   /**
@@ -1207,7 +1206,7 @@ These functions are used to manage a project.
   controls that contain it are deleted. If set to \b EN_CONDITIONAL then the link
   is not deleted if it appears in any control and error 261 is returned.
   */
-  int DLLEXPORT EN_deletelink(EN_Project ph, int index, int actionCode);
+  int DLLEXPORT EN_deletelink(EN_Project ph, int index, EN_ActionCodeType actionCode);
 
   /**
   @brief Gets the index of a link given its ID name.
@@ -1222,12 +1221,12 @@ These functions are used to manage a project.
   @brief Gets the ID name of a link given its index.
   @param ph an EPANET project handle.
   @param index a link's index (starting from 1).
-  @param[out] id The link's ID name.
+  @param[out] out_id The link's ID name.
   @return an error code.
 
   The ID name must be sized to hold at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getlinkid(EN_Project ph, int index, char *id);
+  int  DLLEXPORT EN_getlinkid(EN_Project ph, int index, char *out_id);
 
   /**
   @brief Changes the ID name of a link.
@@ -1244,25 +1243,26 @@ These functions are used to manage a project.
   @brief Retrieves a link's type.
   @param ph an EPANET project handle.
   @param index a link's index (starting from 1).
-  @param[out] linkType the link's type (see @ref EN_LinkType).
+  @param[out] type the link's type (see @ref EN_LinkType).
   @return an error code.
   */
-  int  DLLEXPORT EN_getlinktype(EN_Project ph, int index, int *linkType);
+  int  DLLEXPORT EN_getlinktype(EN_Project ph, int index, EN_LinkType *type);
 
   /**
   @brief Changes a link's type.
   @param ph an EPANET project handle.
-  @param[in,out] index the link's index before [in] and after [out] the type change.
+  @param[in,out] inout_index the link's index before [in] and after [out] the type change.
   @param linkType the new type to change the link to (see @ref EN_LinkType).
   @param actionCode the action taken if any controls contain the link.
-  @return an error code.
+  @return an error code (see @ref EN_ActionCodeType).
 
   If \b actionCode is \b EN_UNCONDITIONAL then all simple and rule-based controls that
   contain the link are deleted when the link's type is changed. If set to
   \b EN_CONDITIONAL then the type change is cancelled if the link appears in any
   control and error 261 is returned.
   */
-  int  DLLEXPORT EN_setlinktype(EN_Project ph, int *index, int linkType, int actionCode);
+  int  DLLEXPORT EN_setlinktype(EN_Project ph, int *inout_index, EN_LinkType linkType,
+                 EN_ActionCodeType actionCode);
 
   /**
   @brief Gets the indexes of a link's start- and end-nodes.
@@ -1294,19 +1294,19 @@ These functions are used to manage a project.
 
   Values are returned in units that depend on the units used for flow rate (see @ref Units).
   */
-  int  DLLEXPORT EN_getlinkvalue(EN_Project ph, int index, int property, double *value);
+  int  DLLEXPORT EN_getlinkvalue(EN_Project ph, int index, EN_LinkProperty property, double *value);
 
   /**
   @brief Sets a property value for a link.
   @param ph an EPANET project handle.
   @param index a link's index.
-  @param property the property to set (see @ref EN_LinkProperty).
+  @param in_enum the property to set (see @ref EN_LinkProperty).
   @param value the new value for the property.
   @return an error code.
 
   Values are in units that depend on the units used for flow rate (see @ref Units).
   */
-  int  DLLEXPORT EN_setlinkvalue(EN_Project ph, int index, int property, double value);
+  int  DLLEXPORT EN_setlinkvalue(EN_Project ph, int index, EN_LinkProperty in_enum, double value);
 
   /**
   @brief Sets a group of properties for a pipe link.
@@ -1366,10 +1366,10 @@ These functions are used to manage a project.
   @brief Retrieves the type of head curve used by a pump.
   @param ph an EPANET project handle.
   @param linkIndex the index of a pump link (starting from 1).
-  @param[out] pumpType the type of head curve used by the pump (see @ref EN_PumpType).
+  @param[out] type the type of head curve used by the pump (see @ref EN_PumpType).
   @return an error code.
   */
-  int  DLLEXPORT EN_getpumptype(EN_Project ph, int linkIndex, int *pumpType);
+  int  DLLEXPORT EN_getpumptype(EN_Project ph, int linkIndex, EN_PumpType *type);
 
   /**
   @brief Retrieves the curve assigned to a pump's head curve.
@@ -1432,18 +1432,18 @@ These functions are used to manage a project.
   @param[out] index the time pattern's index (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_getpatternindex(EN_Project ph, char *id, int *index);
+  int  DLLEXPORT EN_getpatternindex(EN_Project ph, const char *id, int *index);
 
   /**
   @brief Retrieves the ID name of a time pattern given its index.
   @param ph an EPANET project handle.
   @param index a time pattern index (starting from 1).
-  @param[out] id the time pattern's ID name.
+  @param[out] out_id the time pattern's ID name.
   @return an error code.
 
   The ID name must be sized to hold at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getpatternid(EN_Project ph, int index, char *id);
+  int  DLLEXPORT EN_getpatternid(EN_Project ph, int index, char *out_id);
 
   /**
   @brief Changes the ID name of a time pattern given its index.
@@ -1558,12 +1558,12 @@ These functions are used to manage a project.
   @brief Retrieves the ID name of a curve given its index.
   @param ph an EPANET project handle.
   @param index a curve's index (starting from 1).
-  @param[out] id the curve's ID name.
+  @param[out] out_id the curve's ID name.
   @return an error code.
 
   The ID name must be sized to hold at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getcurveid(EN_Project ph, int index, char *id);
+  int  DLLEXPORT EN_getcurveid(EN_Project ph, int index, char *out_id);
 
   /**
   @brief Changes the ID name of a data curve given its index.
@@ -1592,7 +1592,7 @@ These functions are used to manage a project.
   @param[out] type the curve's type (see @ref EN_CurveType).
   @return an error code.
   */
-  int  DLLEXPORT EN_getcurvetype(EN_Project ph, int index, int *type);
+  int  DLLEXPORT EN_getcurvetype(EN_Project ph, int index, EN_CurveType *type);
 
   /**
   @brief Retrieves the value of a single data point for a curve.
@@ -1622,7 +1622,7 @@ These functions are used to manage a project.
   @brief Retrieves all of a curve's data.
   @param ph an EPANET project handle.
   @param index a curve's index (starting from 1).
-  @param[out] id the curve's ID name.
+  @param[out] out_id the curve's ID name.
   @param[out] nPoints the number of data points on the curve.
   @param[out] xValues the curve's x-values.
   @param[out] yValues the curve's y-values.
@@ -1632,7 +1632,7 @@ These functions are used to manage a project.
   to hold `nPoints` number of data points and for sizing `id` to hold at least
   @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getcurve(EN_Project ph, int index, char* id, int *nPoints,
+  int  DLLEXPORT EN_getcurve(EN_Project ph, int index, char* out_id, int *nPoints,
                  double *xValues, double *yValues);
 
   /**
@@ -1683,7 +1683,7 @@ These functions are used to manage a project.
   @param[out] index index of the new control.
   @return an error code.
   */
-  int  DLLEXPORT EN_addcontrol(EN_Project ph, int type, int linkIndex,
+  int  DLLEXPORT EN_addcontrol(EN_Project ph, EN_ControlType type, int linkIndex,
                  double setting, int nodeIndex, double level, int *index);
 
   /**
@@ -1707,7 +1707,7 @@ These functions are used to manage a project.
   that triggers the control.
   @return an error code.
   */
-  int  DLLEXPORT EN_getcontrol(EN_Project ph, int index, int *type, int *linkIndex,
+  int  DLLEXPORT EN_getcontrol(EN_Project ph, int index, EN_ControlType *type, int *linkIndex,
                  double *setting, int *nodeIndex, double *level);
 
   /**
@@ -1723,7 +1723,7 @@ These functions are used to manage a project.
   that triggers the control.
   @return an error code.
   */
-  int  DLLEXPORT EN_setcontrol(EN_Project ph, int index, int type, int linkIndex,
+  int  DLLEXPORT EN_setcontrol(EN_Project ph, int index, EN_ControlType type, int linkIndex,
       double setting, int nodeIndex, double level);
 
   /**
@@ -1780,12 +1780,12 @@ These functions are used to manage a project.
   @brief Gets the ID name of a rule-based control given its index.
   @param ph an EPANET project handle.
   @param index the rule's index (starting from 1).
-  @param[out] id the rule's ID name.
+  @param[out] out_id the rule's ID name.
   @return Error code.
 
   The ID name must be sized to hold at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getruleID(EN_Project ph, int index, char* id);
+  int  DLLEXPORT EN_getruleID(EN_Project ph, int index, char* out_id);
 
   /**
   @brief Gets the properties of a premise in a rule-based control.
@@ -1804,8 +1804,8 @@ These functions are used to manage a project.
   @return an error code.
   */
   int  DLLEXPORT EN_getpremise(EN_Project ph, int ruleIndex, int premiseIndex,
-                 int *logop,  int *object, int *objIndex, int *variable,
-                 int *relop, int *status, double *value);
+                 int *logop, EN_RuleObject *object, int *objIndex, EN_RuleVariable *variable,
+                 EN_RuleOperator *relop, EN_RuleStatus *status, double *value);
 
   /**
   @brief Sets the properties of a premise in a rule-based control.
@@ -1823,8 +1823,8 @@ These functions are used to manage a project.
   @return an error code.
   */
   int  DLLEXPORT EN_setpremise(EN_Project ph, int ruleIndex, int premiseIndex,
-                 int logop, int object, int objIndex, int variable, int relop,
-                 int status, double value);
+                 int logop, EN_RuleObject object, int objIndex, EN_RuleVariable variable,
+                 EN_RuleOperator relop, EN_RuleStatus status, double value);
 
   /**
   @brief Sets the index of an object in a premise of a rule-based control.
@@ -1847,7 +1847,7 @@ These functions are used to manage a project.
   @return an error code.
   */
   int  DLLEXPORT EN_setpremisestatus(EN_Project ph, int ruleIndex, int premiseIndex,
-                 int status);
+                 EN_RuleStatus status);
 
   /**
   @brief Sets the value in a premise of a rule-based control.
@@ -1871,7 +1871,7 @@ These functions are used to manage a project.
   @return an error code.
   */
   int  DLLEXPORT EN_getthenaction(EN_Project ph, int ruleIndex, int actionIndex,
-                 int *linkIndex, int *status, double *setting);
+                 int *linkIndex, EN_RuleStatus *status, double *setting);
 
   /**
   @brief Sets the properties of a THEN action in a rule-based control.
@@ -1884,7 +1884,7 @@ These functions are used to manage a project.
   @return an error code.
   */
   int  DLLEXPORT EN_setthenaction(EN_Project ph, int ruleIndex, int actionIndex,
-                 int linkIndex, int status, double setting);
+                 int linkIndex, EN_RuleStatus status, double setting);
 
   /**
   @brief Gets the properties of an ELSE action in a rule-based control.
@@ -1897,7 +1897,7 @@ These functions are used to manage a project.
   @return an error code.
   */
   int  DLLEXPORT EN_getelseaction(EN_Project ph, int ruleIndex, int actionIndex,
-                 int *linkIndex, int *status, double *setting);
+                 int *linkIndex, EN_RuleStatus *status, double *setting);
 
   /**
   @brief Sets the properties of an ELSE action in a rule-based control.
@@ -1910,7 +1910,7 @@ These functions are used to manage a project.
   @return an error code.
   */
   int  DLLEXPORT EN_setelseaction(EN_Project ph, int ruleIndex, int actionIndex,
-                 int linkIndex, int status, double setting);
+                 int linkIndex, EN_RuleStatus status, double setting);
 
   /**
   @brief Sets the priority of a rule-based control.

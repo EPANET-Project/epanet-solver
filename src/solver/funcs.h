@@ -38,7 +38,7 @@ int     findpattern(Network *, char *);
 int     findcurve(Network *, char *);
 
 Pdemand finddemand(Pdemand, int);
-int     adddemand(Snode *, double, int, char *);
+int     adddemand(Snode *, double, int, const char *);
 void    freedemands(Snode *);
 
 int     addlinkvertex(Slink *, double, double);

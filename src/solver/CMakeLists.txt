@@ -8,17 +8,10 @@
 #
 
 
-# TODO: Best practices discourage setting variables directly
-IF (APPLE)
-  set(INSTALL_NAME_DIR @executable_path/../lib)
-  set(CMAKE_MACOSX_RPATH 1)
-ENDIF (APPLE)
-
-
 set(EPANET_PUBLIC_HEADERS
     include/epanet2_2.h
     include/epanet2_enums.h
-    )
+)
 
 set(EPANET_PRIVATE_HEADERS
     enumstxt.h
@@ -27,7 +20,7 @@ set(EPANET_PRIVATE_HEADERS
     mempool.h
     text.h
     types.h
-    )
+)
 
 set(EPANET_SOURCES
     epanet.c
@@ -53,14 +46,14 @@ set(EPANET_SOURCES
     report.c
     rules.c
     smatrix.c
-    )
+)
 
 # configure file groups
 source_group("Library"
     FILES
         ${EPANET_PRIVATE_HEADERS}
         ${EPANET_SOURCES}
-    )
+)
 
 
 # create build target for code coverage
@@ -75,7 +68,7 @@ if(BUILD_COVERAGE)
     SHARED
         ${EPANET_PRIVATE_HEADERS}
         ${EPANET_SOURCES}
-    )
+  )
 
 # create build target for default epanet library with 2.0 and 2.2 API
 else()
@@ -86,7 +79,7 @@ else()
         SHARED
             ${EPANET_PRIVATE_HEADERS}
             ${EPANET_SOURCES}
-        )
+    )
 
   # Build legacy 32 bit version of the library with def file interface
   else()
@@ -95,10 +88,10 @@ else()
             ${EPANET_PRIVATE_HEADERS}
             ${EPANET_SOURCES}
             ${PROJECT_SOURCE_DIR}/bindings/epanet2.def
-        )
+    )
     set_source_files_properties(${PROJECT_SOURCE_DIR}/bindings/epanet2.def
         PROPERTIES_HEADER_FILE_ONLY TRUE
-        )
+    )
 
   endif()
 endif()
@@ -108,39 +101,57 @@ target_compile_options(epanet2
         "$<$<C_COMPILER_ID:MSVC>:"
             "$<$<CONFIG:Release>:/GL>"
         ">"
-    )
+)
 
 target_compile_definitions(epanet2
     PUBLIC
         "_CRT_SECURE_NO_DEPRECATE"
-    )
+)
 
 target_link_options(epanet2
     PUBLIC
         "$<$<C_COMPILER_ID:MSVC>:"
             "$<$<CONFIG:Release>:/LTCG>"
         ">"
-    )
+)
+
+target_link_libraries(epanet2
+    PUBLIC
+        $<$<NOT:$<BOOL:$<C_COMPILER_ID:MSVC>>>:m>
+)
 
 target_include_directories(epanet2
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${INCLUDE_DIST}>
-    )
+)
 
-target_link_libraries(epanet2
-    PUBLIC
-        $<$<NOT:$<BOOL:$<C_COMPILER_ID:MSVC>>>:m>
-    )
-
+set_target_properties(epanet2
+    PROPERTIES
+        MACOSX_RPATH TRUE
+        SKIP_BUILD_RPATH FALSE
+        BUILD_WITH_INSTALL_RPATH FALSE
+        INSTALL_RPATH "@loader_path"
+        INSTALL_RPATH_USE_LINK_PATH TRUE
+)
 
 install(TARGETS epanet2
     EXPORT epanet2Targets
-    RUNTIME    DESTINATION "${TOOL_DIST}"
-    LIBRARY    DESTINATION "${TOOL_DIST}"
-    ARCHIVE    DESTINATION "${LIBRARY_DIST}"
-    FRAMEWORK  DESTINATION "${TOOL_DIST}"
-    )
+    RUNTIME
+        DESTINATION "${TOOL_DIST}"
+    LIBRARY
+        DESTINATION "${LIBRARY_DIST}"
+    ARCHIVE
+        DESTINATION "${LIBRARY_DIST}"
+    INCLUDES
+        DESTINATION "${INCLUDE_DIST}"
+)
+
+# Install target import scripts so other cmake projects can use epanet libraries
+install(EXPORT epanet2Targets
+    DESTINATION "${CONFIG_DIST}"
+    FILE epanet2-config.cmake
+)
 
 # Need to list files out individually otherwise it won't work
 install(
@@ -150,7 +161,7 @@ install(
         "${CMAKE_CURRENT_SOURCE_DIR}/include/epanet2_enums.h"
     DESTINATION
         "${INCLUDE_DIST}"
-    )
+)
 
 
 # copy epanet2 to build tree for testing
@@ -158,4 +169,4 @@ add_custom_command(TARGET epanet2 POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
         $<TARGET_FILE:epanet2>
         ${CMAKE_BINARY_DIR}/bin/$<CONFIGURATION>/$<TARGET_FILE_NAME:epanet2>
-    )
+)

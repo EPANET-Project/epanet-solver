@@ -12,6 +12,11 @@ add_executable(test_output
     test_output.cpp
     )
 
+target_compile_features(test_output
+    PUBLIC
+        cxx_generalized_initializers
+    )
+
 target_link_libraries(test_output
     ${Boost_LIBRARIES}
     epanet-output

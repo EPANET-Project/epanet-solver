@@ -28,15 +28,16 @@ void  epanet_thread(long i)
     int errorcode = 0;
     EN_Project ph;
 
-    string prefix = "example_";
+    string prefix = "test_";
+    string name = "example_";
     string suffix = ".inp";
-    string input = prefix + to_string(static_cast<long long>(i)) + suffix;
+    string input = prefix + name + to_string(static_cast<long long>(i)) + suffix;
 
     suffix = ".rpt";
-    string report = prefix + to_string(static_cast<long long>(i)) + suffix;
+    string report = name + to_string(static_cast<long long>(i)) + suffix;
 
     suffix = ".out";
-    string output = prefix + to_string(static_cast<long long>(i)) + suffix;
+    string output = name + to_string(static_cast<long long>(i)) + suffix;
 
     printf("Thread #%ld starting EPANET ...\n", i);
 

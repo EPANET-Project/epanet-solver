@@ -19,7 +19,7 @@ node or link appearing in any simple or rule-based controls.
 
 #include <boost/test/unit_test.hpp>
 
-#include "test_toolkit.hpp"
+#include "test_solver.hpp"
 
 
 char R1[] = "RULE 1 \n IF NODE 2 LEVEL < 100 \n THEN LINK 9 STATUS = OPEN";
