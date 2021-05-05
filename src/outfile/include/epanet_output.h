@@ -131,7 +131,7 @@ int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes unit_code, in
 @param[out] value the value of the time parameter.
 @return an error code
 */
-int EXPORT_OUT_API ENR_getTimes(ENR_Handle p_handle, ENR_Time time_code, int *value);
+int EXPORT_OUT_API ENR_getTimes(ENR_Handle p_handle, ENR_Time time_code, int *time);
 
 
 /**
