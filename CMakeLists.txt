@@ -119,7 +119,7 @@ install(
 include(InstallRequiredSystemLibraries)
 
 # Configure CPack driven installer package
-set(CPACK_GENERATOR "ZIP")
+set(CPACK_GENERATOR "ZIP;TGZ")
 set(CPACK_PACKAGE_VENDOR "US_EPA")
 set(CPACK_ARCHIVE_FILE_NAME "epanet")
 
