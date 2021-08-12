@@ -45,8 +45,8 @@ jobs:
         cache-name: cache-sys-deps
       with:
         path: |
-          C:/ProgramData/chocolatey/lib
-          C:/local/boost_1_74_0
+          C:/ProgramData/chocolatey/lib/boost-*
+          C:/local/boost_*
         key: windows-build-${{ env.cache-name }}-${{ hashFiles('packages.config') }}
         restore-keys: |
           windows-build-${{ env.cache-name }}-
