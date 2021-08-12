@@ -25,7 +25,7 @@ jobs:
         include:
           - os: windows-2016
             pkg_file: packages.config
-            pkg_cmnd: choco install -y ${{ matrix.pkg_file }}
+            pkg_cmnd: choco install -y
             cache_paths: |
                 C:/ProgramData/chocolatey/lib/boost-*
                 C:/local/boost_*
@@ -37,7 +37,7 @@ jobs:
 
           - os: ubuntu-16.04
             pkg_file: packages.txt
-            pkg_cmnd: sudo xargs apt-get install -y < ${{ matrix.pkg_file }}
+            pkg_cmnd: sudo xargs apt-get install -y <
             cache_paths: |
                 /var/cache/apt/pkgcache.bin
                 /usr/lib/x86_64-linux-gnu/libboost_*
@@ -75,7 +75,7 @@ jobs:
           windows-
 
     - name: Install system deps
-      run: ${{ matrix.pkg_cmnd }}
+      run: ${{ matrix.pkg_cmnd }} ${{ matrix.pkg_file }}
 
     - name: Build and unit test
       run: ${{ matrix.build_unit_test}}
