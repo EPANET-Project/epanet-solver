@@ -47,9 +47,7 @@ jobs:
           C:/ProgramData/chocolatey/lib/boost-*
           C:/local/boost_*
       with:
-        path: |
-          C:/ProgramData/chocolatey/lib/boost-*
-          C:/local/boost_*
+        path: ${{ env.cache-path }}
         key: windows-build-${{ env.cache-name }}-${{ hashFiles('packages.config') }}
         restore-keys: |
           windows-build-${{ env.cache-name }}-
