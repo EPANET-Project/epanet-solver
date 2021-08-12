@@ -43,6 +43,9 @@ jobs:
       uses: actions/cache@v2
       env:
         cache-name: cache-sys-deps
+        cache-path: |
+          C:/ProgramData/chocolatey/lib/boost-*
+          C:/local/boost_*
       with:
         path: |
           C:/ProgramData/chocolatey/lib/boost-*
