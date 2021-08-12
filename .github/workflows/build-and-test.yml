@@ -39,8 +39,20 @@ jobs:
         ref: master
         path: ci-tools
 
+    - name: Cache system deps
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-sys-deps
+      with:
+        path: /local/boost_1_74_0
+        key: windows-build-${{ env.cache-name}}-${{ hashFiles('windows/packages.config') }}
+        restore-keys: |
+          windows-build-${{ env.cache-name}}-
+          windows-build-
+          windows-
+
     - name: Install system deps
-      run:  choco install boost-msvc-14.1
+      run:  choco install windows/packages.config -y
 
     - name: Build and unit test
       run: make.cmd /t
