@@ -17,12 +17,35 @@ on:
     branches: [ master, develop, release]
 
 jobs:
-  win_unit_test:
-    runs-on: windows-2016
-    defaults:
-      run:
-        shell: cmd
-        working-directory: ci-tools/windows
+  unit_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2016, ubuntu-16.04]
+        include:
+          - os: windows-2016
+            pkg_file: packages.config
+            pkg_cmnd: choco install -y ${{ matrix.pkg_file }}
+            cache_paths: |
+                C:/ProgramData/chocolatey/lib/boost-*
+                C:/local/boost_*
+            build_unit_test: make.cmd /t
+            defaults:
+              run:
+                shell: cmd
+                working-directory: ci-tools/windows
+
+          - os: ubuntu-16.04
+            pkg_file: packages.txt
+            pkg_cmnd: sudo xargs apt-get install -y < ${{ matrix.pkg_file }}
+            cache_paths: |
+                /var/cache/apt/pkgcache.bin
+                /usr/lib/x86_64-linux-gnu/libboost_*
+            build_unit_test: make.sh -t
+            defaults:
+              run:
+                shell: cmd
+                working-directory: ci-tools/linux
 
     env:
       PROJECT: epanet
@@ -43,22 +66,19 @@ jobs:
       uses: actions/cache@v2
       env:
         cache-name: cache-sys-deps
-        cache-path: |
-          C:/ProgramData/chocolatey/lib/boost-*
-          C:/local/boost_*
       with:
-        path: ${{ env.cache-path }}
-        key: windows-build-${{ env.cache-name }}-${{ hashFiles('packages.config') }}
+        path: ${{ matrix.cache-paths }}
+        key: ${{ matrix.os }}-build-${{ env.cache-name }}-${{ hashFiles(${{ matrix.pkg_file }}) }}
         restore-keys: |
           windows-build-${{ env.cache-name }}-
           windows-build-
           windows-
 
     - name: Install system deps
-      run:  choco install packages.config -y
+      run: ${{ matrix.pkg_cmnd }}
 
     - name: Build and unit test
-      run: make.cmd /t
+      run: ${{ matrix.build_unit_test}}
 
 
   # win_reg_test:
