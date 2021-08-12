@@ -44,10 +44,10 @@ jobs:
       env:
         cache-name: cache-sys-deps
       with:
-        path: /local/boost_1_74_0
-        key: windows-build-${{ env.cache-name}}-${{ hashFiles('windows/packages.config') }}
+        path: C:/local/boost_1_74_0
+        key: windows-build-${{ env.cache-name }}-${{ hashFiles('packages.config') }}
         restore-keys: |
-          windows-build-${{ env.cache-name}}-
+          windows-build-${{ env.cache-name }}-
           windows-build-
           windows-
 
