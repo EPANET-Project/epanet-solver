@@ -52,7 +52,7 @@ jobs:
           windows-
 
     - name: Install system deps
-      run:  choco install windows/packages.config -y
+      run:  choco install packages.config -y
 
     - name: Build and unit test
       run: make.cmd /t
