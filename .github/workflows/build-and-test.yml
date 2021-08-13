@@ -70,7 +70,7 @@ jobs:
         cache-name: cache-sys-deps
       with:
         path: ${{ matrix.cache-paths }}
-        key: ${{ matrix.os }}-build-${{ env.cache-name }}-${{ hashFiles(${{ matrix.pkg_file }}) }}
+        key: ${{ matrix.os }}-build-${{ env.cache-name }}-${{ hashFiles('${{ matrix.pkg_file }}') }}
         restore-keys: |
           windows-build-${{ env.cache-name }}-
           windows-build-
