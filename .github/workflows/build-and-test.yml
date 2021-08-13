@@ -24,8 +24,7 @@ jobs:
         os: [windows-2016, ubuntu-18.04]
         include:
           - os: windows-2016
-            pkg_file: packages.config
-            pkg_cmnd: choco install -y
+            pkg_cmnd: choco install -y < packages.config
             cache_paths: |
                 C:/ProgramData/chocolatey/lib/boost-*
                 C:/local/boost_*
@@ -37,8 +36,7 @@ jobs:
                 working-directory: ./ci-tools/windows
 
           - os: ubuntu-18.04
-            pkg_file: packages.txt
-            pkg_cmnd: sudo xargs apt-get install -y <
+            pkg_cmnd: sudo xargs apt-get install -y < packages.txt
             build_unit_test: ./make.sh -t
             experimental: true
             defaults:
@@ -74,16 +72,18 @@ jobs:
       env:
         cache_paths: ${{ matrix.cache_paths }}
         cache_name: cache-boost
-        pkg_file: windows/packages.config
+        pkg_file_hash: hashFiles('**/windows/packages.config')
       with:
         path: ${{ env.cache_paths }}
-        key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/windows/packages.config') }}
+        key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ env.pkg_file_hash }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/windows/packages.config') }}
+          ${{ runner.os }}-build-${{ env.cache_name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
 
     - name: Install boost
       if: steps.cache-sys-deps.outputs.cache-hit != 'true'
-      run: ${{ matrix.pkg_cmnd }} ${{ matrix.pkg_file }}
+      run: ${{ matrix.pkg_cmnd }}
 
     - name: Build and unit test
       run: ${{ matrix.build_unit_test }}
