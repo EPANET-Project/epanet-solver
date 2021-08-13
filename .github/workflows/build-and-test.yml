@@ -29,7 +29,7 @@ jobs:
             cache_paths: |
                 C:/ProgramData/chocolatey/lib/boost-*
                 C:/local/boost_*
-            build_unit_test: make.cmd /t
+            build_unit_test: ./make.cmd /t
             experimental: false
             defaults:
               run:
@@ -42,7 +42,7 @@ jobs:
             cache_paths: |
                 /var/cache/apt/pkgcache.bin
                 /usr/lib/x86_64-linux-gnu/libboost_*
-            build_unit_test: make.sh -t
+            build_unit_test: ./make.sh -t
             experimental: true
             defaults:
               run:
