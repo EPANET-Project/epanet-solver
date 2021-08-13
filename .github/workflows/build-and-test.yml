@@ -70,7 +70,7 @@ jobs:
       env:
         hash: ${{ hashFiles('**/windows/packages.config') }}
       run: |
-        echo "PKG_FILE_HASH=${{ env.hash }}" >> $GITHUB_ENV
+        echo "PKG_FILE_HASH=${{ env.hash }}" >> %GITHUB_ENV%
 
     - name: Cache boost
       if: runner.os != 'Linux'
