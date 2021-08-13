@@ -26,9 +26,7 @@ jobs:
           - os: windows-2016
             pkg_file: packages.config
             pkg_cmnd: choco install -y
-            cache_paths: |
-                C:/ProgramData/chocolatey/lib/boost-*
-                C:/local/boost_*
+            cache_paths: C:/local/boost_*
             build_unit_test: ./make.cmd /t
             experimental: false
             defaults:
@@ -39,9 +37,7 @@ jobs:
           - os: ubuntu-18.04
             pkg_file: packages.txt
             pkg_cmnd: sudo xargs apt-get install -y <
-            cache_paths: |
-                /var/cache/apt/pkgcache.bin
-                /usr/lib/x86_64-linux-gnu/libboost_*
+            cache_paths: /usr/lib/x86_64-linux-gnu/libboost_*
             build_unit_test: ./make.sh -t
             experimental: true
             defaults:
