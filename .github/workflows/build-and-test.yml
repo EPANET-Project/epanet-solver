@@ -74,10 +74,10 @@ jobs:
       env:
         cache_paths: ${{ matrix.cache_paths }}
         cache_name: cache-boost
-        pkg_file: **/windows/packages.config
+        pkg_file: windows/packages.config
       with:
         path: ${{ env.cache_paths }}
-        key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('${{ env.pkg_file }}') }}
+        key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/${{ env.pkg_file }}') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache_name }}-
           ${{ runner.os }}-build-
