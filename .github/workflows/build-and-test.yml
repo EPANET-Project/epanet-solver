@@ -79,9 +79,7 @@ jobs:
         path: ${{ env.cache_paths }}
         key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/${{ env.pkg_file }}') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache_name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+          ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/${{ env.pkg_file }}') }}
 
     - name: Install boost
       if: steps.cache-sys-deps.outputs.cache-hit != 'true'
