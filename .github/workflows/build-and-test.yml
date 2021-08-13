@@ -39,7 +39,6 @@ jobs:
           - os: ubuntu-18.04
             pkg_file: packages.txt
             pkg_cmnd: sudo xargs apt-get install -y <
-            cache_paths: /usr/lib/x86_64-linux-gnu/libboost_*
             build_unit_test: ./make.sh -t
             experimental: true
             defaults:
@@ -68,14 +67,14 @@ jobs:
         ref: master
         path: ci-tools
 
-    - name: Cache system deps
+    - name: Cache boost
       if: runner.os != 'Linux'
-      id: cache-sys-deps
+      id: cache-boost
       uses: actions/cache@v2
       env:
         cache_paths: ${{ matrix.cache_paths }}
-        cache_name: cache-sys-deps
-        pkg_file: ${{ matrix.defaults.run.working-directory }}/${{ matrix.pkg_file }}
+        cache_name: cache-boost
+        pkg_file: **/windows/packages.config
       with:
         path: ${{ env.cache_paths }}
         key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('${{ env.pkg_file }}') }}
@@ -84,7 +83,7 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
 
-    - name: Install system deps
+    - name: Install boost
       if: steps.cache-sys-deps.outputs.cache-hit != 'true'
       run: ${{ matrix.pkg_cmnd }} ${{ matrix.pkg_file }}
 
