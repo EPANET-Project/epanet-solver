@@ -71,6 +71,7 @@ jobs:
         path: ci-tools
 
     - name: Cache system deps
+      id: cache-sys-deps
       uses: actions/cache@v2
       env:
         cache_paths: ${{ matrix.cache_paths }}
@@ -79,11 +80,12 @@ jobs:
         path: ${{ env.cache_paths }}
         key: ${{ matrix.os }}-build-${{ env.cache-name }}-${{ hashFiles('${{ matrix.pkg_file }}') }}
         restore-keys: |
-          windows-build-${{ env.cache-name }}-
-          windows-build-
-          windows-
+          ${{ matrix.os }}-build-${{ env.cache-name }}-
+          ${{ matrix.os }}-build-
+          ${{ matrix.os }}-
 
     - name: Install system deps
+      if: steps.cache-sys-deps.outputs.cache-hit != 'true'
       run: ${{ matrix.pkg_cmnd }} ${{ matrix.pkg_file }}
 
     - name: Build and unit test
