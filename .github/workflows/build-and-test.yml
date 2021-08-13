@@ -24,7 +24,7 @@ jobs:
         os: [windows-2016, ubuntu-18.04]
         include:
           - os: windows-2016
-            pkg_cmnd: choco install -y < packages.config
+            pkg_cmnd: choco install -y packages.config
             cache_paths: |
                 C:/ProgramData/chocolatey/lib/boost-*
                 C:/local/boost_*
@@ -72,7 +72,7 @@ jobs:
       env:
         cache_paths: ${{ matrix.cache_paths }}
         cache_name: cache-boost
-        pkg_file_hash: hashFiles('**/windows/packages.config')
+        pkg_file_hash: ${{ hashFiles('**/windows/packages.config') }}
       with:
         path: ${{ env.cache_paths }}
         key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ env.pkg_file_hash }}
