@@ -77,9 +77,9 @@ jobs:
         pkg_file: windows/packages.config
       with:
         path: ${{ env.cache_paths }}
-        key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/${{ env.pkg_file }}') }}
+        key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/windows/packages.config') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/${{ env.pkg_file }}') }}
+          ${{ runner.os }}-build-${{ env.cache_name }}-${{ hashFiles('**/windows/packages.config') }}
 
     - name: Install boost
       if: steps.cache-sys-deps.outputs.cache-hit != 'true'
