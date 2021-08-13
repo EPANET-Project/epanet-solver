@@ -21,13 +21,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2016, ubuntu-18.04]
+        os: [windows-2016, ubuntu-18.04, macos-10.15]
         include:
           - os: windows-2016
             pkg_cmnd: choco install -y packages.config
-            cache_paths: |
-                C:/ProgramData/chocolatey/lib/boost-*
-                C:/local/boost_*
             build_unit_test: ./make.cmd /t
             experimental: false
             defaults:
@@ -43,6 +40,15 @@ jobs:
               run:
                 shell: bash
                 working-directory: ./ci-tools/linux
+
+          - os: macos-10.15
+            pkg_cmnd: xargs brew install -y < packages.txt
+            build_unit_test: ./make.zsh -t
+            experimental: true
+            defaults:
+              run:
+                shell: zsh {0}
+                working-directory: ./ci-tools/darwin
 
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
@@ -65,27 +71,25 @@ jobs:
         ref: master
         path: ci-tools
 
-    - name: Create pkg file hash
+    - name: Cache boost on Windows
       if: runner.os == 'Windows'
-      env:
-        hash: ${{ hashFiles('**/windows/packages.config') }}
-      run: |
-        echo PKG_FILE_HASH=${{ env.hash }} >> %GITHUB_ENV%
-
-    - name: Cache boost
-      if: runner.os != 'Linux'
       id: cache-boost
       uses: actions/cache@v2
+      env:
+        cache_paths: |
+            C:/ProgramData/chocolatey/lib/boost-*
+            C:/local/boost_*
+        pkg_file_hash: ${{ hashFiles('**/windows/packages.config') }}
       with:
-        path: ${{ matrix.cache_paths }}
-        key: ${{ runner.os }}-build-cache-boost-${{ env.PKG_FILE_HASH }}
+        path: ${{ env.cache_paths }}
+        key: ${{ runner.os }}-cache-boost-${{ env.pkg_file_hash }}
         restore-keys: |
-          ${{ runner.os }}-build-cache-boost-
-          ${{ runner.os }}-build-
+          ${{ runner.os }}-cache-boost-
+          ${{ runner.os }}-cache-
           ${{ runner.os }}-
 
     - name: Install boost
-      if: steps.cache-sys-deps.outputs.cache-hit != 'true'
+      if: steps.cache-boost.outputs.cache-hit != 'true'
       run: ${{ matrix.pkg_cmnd }}
 
     - name: Build and unit test
