@@ -30,6 +30,7 @@ jobs:
                 C:/ProgramData/chocolatey/lib/boost-*
                 C:/local/boost_*
             build_unit_test: make.cmd /t
+            experimental: false
             defaults:
               run:
                 shell: cmd
@@ -42,6 +43,7 @@ jobs:
                 /var/cache/apt/pkgcache.bin
                 /usr/lib/x86_64-linux-gnu/libboost_*
             build_unit_test: make.sh -t
+            experimental: true
             defaults:
               run:
                 shell: bash
