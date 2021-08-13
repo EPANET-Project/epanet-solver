@@ -72,9 +72,10 @@ jobs:
       env:
         cache_paths: ${{ matrix.cache_paths }}
         cache-name: cache-sys-deps
+        pkg_file: ${{ matrix.pkg_file }}
       with:
         path: ${{ env.cache_paths }}
-        key: ${{ matrix.os }}-build-${{ env.cache-name }}-${{ hashFiles('${{ matrix.pkg_file }}') }}
+        key: ${{ matrix.os }}-build-${{ env.cache-name }}-${{ hashFiles('${{ env.pkg_file }}') }}
         restore-keys: |
           ${{ matrix.os }}-build-${{ env.cache-name }}-
           ${{ matrix.os }}-build-
@@ -85,7 +86,7 @@ jobs:
       run: ${{ matrix.pkg_cmnd }} ${{ matrix.pkg_file }}
 
     - name: Build and unit test
-      run: ${{ matrix.build_unit_test}}
+      run: ${{ matrix.build_unit_test }}
 
 
   # win_reg_test:
