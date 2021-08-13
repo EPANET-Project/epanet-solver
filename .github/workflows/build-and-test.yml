@@ -51,6 +51,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
+    defaults:
+      run:
+        shell: ${{ matrix.defaults.run.shell }}
+        working-directory: ${{ matrix.defaults.run.working-directory }}
     env:
       PROJECT: epanet
       BUILD_HOME: build
