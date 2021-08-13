@@ -69,7 +69,7 @@ jobs:
       if: runner.os == 'Windows'
       env:
         hash: ${{ hashFiles('**/windows/packages.config') }}
-      run: echo "PKG_FILE_HASH=${{ env.hash }}" >> $GITHUB_ENV
+      run: echo "pkg_file_hash=${{ env.hash }}" >> $GITHUB_ENV
 
     - name: Cache boost
       if: runner.os != 'Linux'
@@ -78,7 +78,6 @@ jobs:
       env:
         cache_paths: ${{ matrix.cache_paths }}
         cache_name: cache-boost
-        pkg_file_hash: ${{ hashFiles('**/windows/packages.config') }}
       with:
         path: ${{ env.cache_paths }}
         key: ${{ runner.os }}-build-${{ env.cache_name }}-${{ env.pkg_file_hash }}
