@@ -42,7 +42,7 @@ jobs:
                 working-directory: ./ci-tools/linux
 
           - os: macos-10.15
-            pkg_cmnd: xargs brew install -y < packages.txt
+            pkg_cmnd: xargs brew install < packages.txt
             build_unit_test: ./make.zsh -t
             experimental: true
             defaults:
