@@ -17,13 +17,45 @@ on:
     branches: [ master, develop, release]
 
 jobs:
-  win_unit_test:
-    runs-on: windows-2016
+  unit_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2016, ubuntu-18.04, macos-10.15]
+        include:
+          - os: windows-2016
+            pkg_cmnd: choco install -y packages.config
+            build_unit_test: ./make.cmd /t
+            experimental: false
+            defaults:
+              run:
+                shell: cmd
+                working-directory: ./ci-tools/windows
+
+          - os: ubuntu-18.04
+            pkg_cmnd: sudo xargs apt-get install -y < packages.txt
+            build_unit_test: ./make.sh -t
+            experimental: true
+            defaults:
+              run:
+                shell: bash
+                working-directory: ./ci-tools/linux
+
+          - os: macos-10.15
+            pkg_cmnd: xargs brew install < packages.txt
+            build_unit_test: ./make.zsh -t
+            experimental: true
+            defaults:
+              run:
+                shell: zsh {0}
+                working-directory: ./ci-tools/darwin
+
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
     defaults:
       run:
-        shell: cmd
-        working-directory: ci-tools/windows
-
+        shell: ${{ matrix.defaults.run.shell }}
+        working-directory: ${{ matrix.defaults.run.working-directory }}
     env:
       PROJECT: epanet
       BUILD_HOME: build
@@ -39,11 +71,29 @@ jobs:
         ref: master
         path: ci-tools
 
-    - name: Install system deps
-      run:  choco install boost-msvc-14.1
+    - name: Cache boost on Windows
+      if: runner.os == 'Windows'
+      id: cache-boost
+      uses: actions/cache@v2
+      env:
+        cache_paths: |
+            C:/ProgramData/chocolatey/lib/boost-*
+            C:/local/boost_*
+        pkg_file_hash: ${{ hashFiles('**/windows/packages.config') }}
+      with:
+        path: ${{ env.cache_paths }}
+        key: ${{ runner.os }}-cache-boost-${{ env.pkg_file_hash }}
+        restore-keys: |
+          ${{ runner.os }}-cache-boost-
+          ${{ runner.os }}-cache-
+          ${{ runner.os }}-
+
+    - name: Install boost
+      if: steps.cache-boost.outputs.cache-hit != 'true'
+      run: ${{ matrix.pkg_cmnd }}
 
     - name: Build and unit test
-      run: make.cmd /t
+      run: ${{ matrix.build_unit_test }}
 
 
   # win_reg_test:
