@@ -26,7 +26,9 @@ jobs:
           - os: windows-2016
             pkg_file: packages.config
             pkg_cmnd: choco install -y
-            cache_paths: C:/local/boost_*
+            cache_paths: |
+                C:/ProgramData/chocolatey/lib/boost-*
+                C:/local/boost_*
             build_unit_test: ./make.cmd /t
             experimental: false
             defaults:
@@ -67,6 +69,7 @@ jobs:
         path: ci-tools
 
     - name: Cache system deps
+      if: runner.os != 'Linux'
       id: cache-sys-deps
       uses: actions/cache@v2
       env:
