@@ -34,7 +34,7 @@ jobs:
             defaults:
               run:
                 shell: cmd
-                working-directory: ci-tools/windows
+                working-directory: ./ci-tools/windows
 
           - os: ubuntu-18.04
             pkg_file: packages.txt
@@ -47,7 +47,7 @@ jobs:
             defaults:
               run:
                 shell: bash
-                working-directory: ci-tools/linux
+                working-directory: ./ci-tools/linux
 
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
