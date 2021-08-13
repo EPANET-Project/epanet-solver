@@ -44,9 +44,11 @@ jobs:
             build_unit_test: make.sh -t
             defaults:
               run:
-                shell: cmd
+                shell: bash
                 working-directory: ci-tools/linux
 
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
     env:
       PROJECT: epanet
       BUILD_HOME: build
