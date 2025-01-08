@@ -11,6 +11,7 @@
 set(EPANET_PUBLIC_HEADERS
     include/epanet2_2.h
     include/epanet2_enums.h
+    include/epanet2.h
 )
 
 set(EPANET_PRIVATE_HEADERS
