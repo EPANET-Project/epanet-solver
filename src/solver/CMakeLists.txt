@@ -193,7 +193,6 @@ install(
 # Need to list files out individually otherwise it won't work
 install(
     FILES
-        "${CMAKE_CURRENT_SOURCE_DIR}/include/epanet2.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/include/epanet2_2.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/include/epanet2_enums.h"
     DESTINATION
