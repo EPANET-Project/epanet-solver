@@ -27,13 +27,30 @@
 #define snprintf _snprintf
 #endif
 
+
+
+int  EN_epanet(const char *inpFile, const char *rptFile,
+                 const char *outFile, void (*pviewprog) (char *))
+{
+    int errcode = 0;
+    EN_Project ph;
+    errcode = EN_createproject(&ph);
+
+    if (errcode) return errcode;
+    errcode = EN_runproject(ph, inpFile, rptFile, outFile, pviewprog);
+
+    EN_deleteproject(ph);
+    return errcode;
+}
+
+
 /********************************************************************
 
     Project Functions
 
 ********************************************************************/
 
-int DLLEXPORT EN_createproject(EN_Project *ph)
+int EN_createproject(EN_Project *ph)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  p = pointer to a new EPANET project
@@ -51,7 +68,7 @@ int DLLEXPORT EN_createproject(EN_Project *ph)
     return 0;
 }
 
-int DLLEXPORT EN_deleteproject(EN_Project ph)
+int EN_deleteproject(EN_Project ph)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  none
@@ -71,7 +88,7 @@ int DLLEXPORT EN_deleteproject(EN_Project ph)
     return 0;
 }
 
-int DLLEXPORT EN_runproject(EN_Project ph, const char *inpFile,
+int EN_runproject(EN_Project ph, const char *inpFile,
                             const char *rptFile, const char *outFile,
                             void (*pviewprog)(char *))
 /*------------------------------------------------------------------------
@@ -116,7 +133,7 @@ int DLLEXPORT EN_runproject(EN_Project ph, const char *inpFile,
     return errcode;
 }
 
-int DLLEXPORT EN_init(EN_Project ph, const char *rptFile, const char *outFile,
+int EN_init(EN_Project ph, const char *rptFile, const char *outFile,
                       EN_FlowUnits unitsType, int headLossType)
 /*----------------------------------------------------------------
  **  Input:   rptFile = name of report file
@@ -171,7 +188,7 @@ int DLLEXPORT EN_init(EN_Project ph, const char *rptFile, const char *outFile,
     return errcode;
 }
 
-int DLLEXPORT EN_open(EN_Project ph, const char *inpFile, const char *rptFile,
+int EN_open(EN_Project ph, const char *inpFile, const char *rptFile,
                       const char *outFile)
 /*----------------------------------------------------------------
  **  Input:   inpFile = name of input file
@@ -235,7 +252,7 @@ int DLLEXPORT EN_open(EN_Project ph, const char *inpFile, const char *rptFile,
   return errcode;
 }
 
-int DLLEXPORT EN_gettitle(EN_Project ph, char *line1, char *line2, char *line3)
+int EN_gettitle(EN_Project ph, char *line1, char *line2, char *line3)
 /*----------------------------------------------------------------
 **  Input:   None
 **  Output:  line1, line2, line3 = project's title lines
@@ -251,7 +268,7 @@ int DLLEXPORT EN_gettitle(EN_Project ph, char *line1, char *line2, char *line3)
     return 0;
 }
 
-int DLLEXPORT EN_settitle(EN_Project ph, char *line1, char *line2, char *line3)
+int EN_settitle(EN_Project ph, char *line1, char *line2, char *line3)
 /*----------------------------------------------------------------
 **  Input:  line1, line2, line3 = project's title lines
 **  Returns: error code
@@ -266,7 +283,7 @@ int DLLEXPORT EN_settitle(EN_Project ph, char *line1, char *line2, char *line3)
     return 0;
 }
 
-int  DLLEXPORT EN_getcomment(EN_Project ph, EN_ObjectType object, int index, char *out_comment)
+int  EN_getcomment(EN_Project ph, EN_ObjectType object, int index, char *out_comment)
 /*----------------------------------------------------------------
 **  Input:   object = a type of object (see EN_ObjectType)
 **           index = the object's index
@@ -279,7 +296,7 @@ int  DLLEXPORT EN_getcomment(EN_Project ph, EN_ObjectType object, int index, cha
     return getcomment(&ph->network, object, index, out_comment);
 }
 
-int  DLLEXPORT EN_setcomment(EN_Project ph, EN_ObjectType object, int index, char *comment)
+int  EN_setcomment(EN_Project ph, EN_ObjectType object, int index, char *comment)
 /*----------------------------------------------------------------
 **  Input:   object = a type of object (see EN_ObjectType)
 **           index = the object's index
@@ -292,7 +309,7 @@ int  DLLEXPORT EN_setcomment(EN_Project ph, EN_ObjectType object, int index, cha
     return setcomment(&ph->network, object, index, comment);
 }
 
-int DLLEXPORT EN_getcount(EN_Project ph, EN_CountType object, int *count)
+int EN_getcount(EN_Project ph, EN_CountType object, int *count)
 /*----------------------------------------------------------------
 **  Input:   object = type of object to count (see EN_CountType)
 **  Output:  count = number of objects of the specified type
@@ -334,7 +351,7 @@ int DLLEXPORT EN_getcount(EN_Project ph, EN_CountType object, int *count)
     return 0;
 }
 
-int DLLEXPORT EN_saveinpfile(EN_Project ph, const char *filename)
+int EN_saveinpfile(EN_Project ph, const char *filename)
 /*----------------------------------------------------------------
  **  Input:   filename = name of file to which project is saved
  **  Output:  none
@@ -347,7 +364,7 @@ int DLLEXPORT EN_saveinpfile(EN_Project ph, const char *filename)
   return saveinpfile(ph, filename);
 }
 
-int DLLEXPORT EN_close(EN_Project ph)
+int EN_close(EN_Project ph)
 /*----------------------------------------------------------------
  **  Input:   none
  **  Output:  none
@@ -399,7 +416,7 @@ int DLLEXPORT EN_close(EN_Project ph)
 
  ********************************************************************/
 
-int DLLEXPORT EN_solveH(EN_Project ph)
+int EN_solveH(EN_Project ph)
 /*----------------------------------------------------------------
  **  Input:   none
  **  Output:  none
@@ -440,7 +457,7 @@ int DLLEXPORT EN_solveH(EN_Project ph)
     return errcode;
 }
 
-int DLLEXPORT EN_saveH(EN_Project ph)
+int EN_saveH(EN_Project ph)
 /*----------------------------------------------------------------
  **  Input:   none
  **  Output:  none
@@ -472,7 +489,7 @@ int DLLEXPORT EN_saveH(EN_Project ph)
     return errcode;
 }
 
-int DLLEXPORT EN_openH(EN_Project ph)
+int EN_openH(EN_Project ph)
 /*----------------------------------------------------------------
  **  Input:   none
  **  Output:  none
@@ -498,7 +515,7 @@ int DLLEXPORT EN_openH(EN_Project ph)
     return errcode;
 }
 
-int DLLEXPORT EN_initH(EN_Project ph, EN_SaveInitOptions initFlag)
+int EN_initH(EN_Project ph, EN_SaveInitOptions initFlag)
 /*----------------------------------------------------------------
  **  Input:   initFlag = 2-digit flag where 1st (left) digit indicates
  **                      if link flows should be re-initialized (1) or
@@ -543,7 +560,7 @@ int DLLEXPORT EN_initH(EN_Project ph, EN_SaveInitOptions initFlag)
     return errcode;
 }
 
-int DLLEXPORT EN_runH(EN_Project ph, long *currentTime)
+int EN_runH(EN_Project ph, long *currentTime)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  currentTime = current elapsed time (sec)
@@ -561,7 +578,7 @@ int DLLEXPORT EN_runH(EN_Project ph, long *currentTime)
     return errcode;
 }
 
-int DLLEXPORT EN_nextH(EN_Project ph, long *tStep)
+int EN_nextH(EN_Project ph, long *tStep)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  tStep = next hydraulic time step to take (sec)
@@ -580,7 +597,7 @@ int DLLEXPORT EN_nextH(EN_Project ph, long *tStep)
     return errcode;
 }
 
-int DLLEXPORT EN_closeH(EN_Project ph)
+int EN_closeH(EN_Project ph)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  none
@@ -595,7 +612,7 @@ int DLLEXPORT EN_closeH(EN_Project ph)
   return 0;
 }
 
-int DLLEXPORT EN_savehydfile(EN_Project ph, const char *filename)
+int EN_savehydfile(EN_Project ph, const char *filename)
 /*----------------------------------------------------------------
 **  Input:   filename = name of file to which hydraulic results are saved
 **  Output:  none
@@ -623,7 +640,7 @@ int DLLEXPORT EN_savehydfile(EN_Project ph, const char *filename)
     return 0;
 }
 
-int DLLEXPORT EN_usehydfile(EN_Project ph, const char *filename)
+int EN_usehydfile(EN_Project ph, const char *filename)
 /*----------------------------------------------------------------
 **  Input:   filename = name of previously saved hydraulics file
 **  Output:  none
@@ -661,7 +678,7 @@ int DLLEXPORT EN_usehydfile(EN_Project ph, const char *filename)
 
  ********************************************************************/
 
-int DLLEXPORT EN_solveQ(EN_Project ph)
+int EN_solveQ(EN_Project ph)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  none
@@ -706,7 +723,7 @@ int DLLEXPORT EN_solveQ(EN_Project ph)
     return errcode;
 }
 
-int DLLEXPORT EN_openQ(EN_Project ph)
+int EN_openQ(EN_Project ph)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  none
@@ -730,7 +747,7 @@ int DLLEXPORT EN_openQ(EN_Project ph)
     return errcode;
 }
 
-int DLLEXPORT EN_initQ(EN_Project ph, EN_SaveInitOptions saveFlag)
+int EN_initQ(EN_Project ph, EN_SaveInitOptions saveFlag)
 /*----------------------------------------------------------------
 **  Input:   saveFlag = flag indicating if results should be saved
 **                      to the binary output file or not
@@ -754,7 +771,7 @@ int DLLEXPORT EN_initQ(EN_Project ph, EN_SaveInitOptions saveFlag)
     return errcode;
 }
 
-int DLLEXPORT EN_runQ(EN_Project ph, long *currentTime)
+int EN_runQ(EN_Project ph, long *currentTime)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  currentTime = current simulation time (sec)
@@ -773,7 +790,7 @@ int DLLEXPORT EN_runQ(EN_Project ph, long *currentTime)
     return errcode;
 }
 
-int DLLEXPORT EN_nextQ(EN_Project ph, long *tStep)
+int EN_nextQ(EN_Project ph, long *tStep)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  tStep = time step over which water quality is updated (sec)
@@ -796,7 +813,7 @@ int DLLEXPORT EN_nextQ(EN_Project ph, long *tStep)
     return errcode;
 }
 
-int DLLEXPORT EN_stepQ(EN_Project ph, long *timeLeft)
+int EN_stepQ(EN_Project ph, long *timeLeft)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  timeLeft = amount of simulation time remaining (sec)
@@ -819,7 +836,7 @@ int DLLEXPORT EN_stepQ(EN_Project ph, long *timeLeft)
     return errcode;
 }
 
-int DLLEXPORT EN_closeQ(EN_Project ph)
+int EN_closeQ(EN_Project ph)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  none
@@ -841,7 +858,7 @@ int DLLEXPORT EN_closeQ(EN_Project ph)
 
  ********************************************************************/
 
-int DLLEXPORT EN_writeline(EN_Project ph, char *line)
+int EN_writeline(EN_Project ph, char *line)
 /*----------------------------------------------------------------
 **  Input:   line = line of text
 **  Output:  none
@@ -855,7 +872,7 @@ int DLLEXPORT EN_writeline(EN_Project ph, char *line)
     return 0;
 }
 
-int DLLEXPORT EN_report(EN_Project ph)
+int EN_report(EN_Project ph)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  none
@@ -877,7 +894,7 @@ int DLLEXPORT EN_report(EN_Project ph)
     return errcode;
 }
 
-int  DLLEXPORT EN_copyreport(EN_Project ph, char *filename)
+int  EN_copyreport(EN_Project ph, char *filename)
 /*----------------------------------------------------------------
 **  Input:   filename = name of file to receive copy of report
 **  Output:  none
@@ -890,7 +907,7 @@ int  DLLEXPORT EN_copyreport(EN_Project ph, char *filename)
     return copyreport(ph, filename);
 }
 
-int DLLEXPORT EN_clearreport(EN_Project ph)
+int EN_clearreport(EN_Project ph)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  none
@@ -902,7 +919,7 @@ int DLLEXPORT EN_clearreport(EN_Project ph)
     return clearreport(ph);
 }
 
-int DLLEXPORT EN_resetreport(EN_Project ph)
+int EN_resetreport(EN_Project ph)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  none
@@ -926,7 +943,7 @@ int DLLEXPORT EN_resetreport(EN_Project ph)
     return 0;
 }
 
-int DLLEXPORT EN_setreport(EN_Project ph, char *format)
+int EN_setreport(EN_Project ph, char *format)
 /*----------------------------------------------------------------
 **  Input:   format = a report formatting command
 **  Output:  none
@@ -945,7 +962,7 @@ int DLLEXPORT EN_setreport(EN_Project ph, char *format)
     else return 0;
 }
 
-int DLLEXPORT EN_setstatusreport(EN_Project ph, EN_StatusReport level)
+int EN_setstatusreport(EN_Project ph, EN_StatusReport level)
 /*----------------------------------------------------------------
 **  Input:   level = level of reporting to use (see EN_StatusReport)
 **  Output:  none
@@ -964,7 +981,7 @@ int DLLEXPORT EN_setstatusreport(EN_Project ph, EN_StatusReport level)
     return errcode;
 }
 
-int DLLEXPORT EN_getversion(int *version)
+int EN_getversion(int *version)
 /*----------------------------------------------------------------
 **  Input:    none
 **  Output:   version = version number of the source code
@@ -981,7 +998,7 @@ int DLLEXPORT EN_getversion(int *version)
     return 0;
 }
 
-int DLLEXPORT EN_geterror(int errcode, char *errmsg, int maxLen)
+int EN_geterror(int errcode, char *errmsg, int maxLen)
 /*----------------------------------------------------------------
 **  Input:   errcode = an error or warnng code
 **           maxLen = maximum characters that errmsg can hold
@@ -1027,7 +1044,7 @@ int DLLEXPORT EN_geterror(int errcode, char *errmsg, int maxLen)
         return 0;
 }
 
-int DLLEXPORT EN_getstatistic(EN_Project ph, EN_AnalysisStatistic type, double *value)
+int EN_getstatistic(EN_Project ph, EN_AnalysisStatistic type, double *value)
 /*----------------------------------------------------------------
 **  Input:   type = type of simulation statistic (see EN_AnalysisStatistic)
 **  Output:  value = simulation analysis statistic value
@@ -1066,7 +1083,7 @@ int DLLEXPORT EN_getstatistic(EN_Project ph, EN_AnalysisStatistic type, double *
     return 0;
 }
 
-int DLLEXPORT EN_getresultindex(EN_Project ph, EN_ObjectType type, int index, int *value)
+int EN_getresultindex(EN_Project ph, EN_ObjectType type, int index, int *value)
 /*----------------------------------------------------------------
 **  Input:   type = type of object (either EN_NODE or EN_LINK)
 **           index = the object's index
@@ -1099,7 +1116,7 @@ int DLLEXPORT EN_getresultindex(EN_Project ph, EN_ObjectType type, int index, in
 
 ********************************************************************/
 
-int DLLEXPORT EN_getoption(EN_Project ph, EN_Option option, double *value)
+int EN_getoption(EN_Project ph, EN_Option option, double *value)
 /*----------------------------------------------------------------
 **  Input:   option = an analysis option code (see EN_Option)
 **  Output:  value = analysis option value
@@ -1195,7 +1212,7 @@ int DLLEXPORT EN_getoption(EN_Project ph, EN_Option option, double *value)
     return 0;
 }
 
-int  DLLEXPORT EN_setoption(EN_Project ph, EN_Option option, double value)
+int  EN_setoption(EN_Project ph, EN_Option option, double value)
 /*----------------------------------------------------------------
 **  Input:   option  = analysis option code (see EN_Option)
 **           value = analysis option value
@@ -1351,7 +1368,7 @@ int  DLLEXPORT EN_setoption(EN_Project ph, EN_Option option, double value)
     return 0;
 }
 
-int DLLEXPORT EN_getflowunits(EN_Project ph, EN_FlowUnits *units)
+int EN_getflowunits(EN_Project ph, EN_FlowUnits *units)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  units = flow units code (see EN_FlowUnits)
@@ -1366,7 +1383,7 @@ int DLLEXPORT EN_getflowunits(EN_Project ph, EN_FlowUnits *units)
     return 0;
 }
 
-int DLLEXPORT EN_setflowunits(EN_Project ph, EN_FlowUnits units)
+int EN_setflowunits(EN_Project ph, EN_FlowUnits units)
 /*----------------------------------------------------------------
 **  Input:   units = flow units code (see EN_FlowUnits)
 **  Output:  none
@@ -1441,7 +1458,7 @@ int DLLEXPORT EN_setflowunits(EN_Project ph, EN_FlowUnits units)
     return 0;
 }
 
-int  DLLEXPORT EN_gettimeparam(EN_Project ph, EN_TimeParameter param, long *value)
+int  EN_gettimeparam(EN_Project ph, EN_TimeParameter param, long *value)
 /*----------------------------------------------------------------
 **  Input:   param = time parameter code (see EN_TimeParameter)
 **  Output:  value = time parameter value
@@ -1516,7 +1533,7 @@ int  DLLEXPORT EN_gettimeparam(EN_Project ph, EN_TimeParameter param, long *valu
     return 0;
 }
 
-int  DLLEXPORT EN_settimeparam(EN_Project ph, EN_TimeParameter param, long value)
+int  EN_settimeparam(EN_Project ph, EN_TimeParameter param, long value)
 /*----------------------------------------------------------------
 **  Input:   param = time parameter code (see EN_TimeParameter)
 **           value = time parameter value
@@ -1598,7 +1615,7 @@ int  DLLEXPORT EN_settimeparam(EN_Project ph, EN_TimeParameter param, long value
     return 0;
 }
 
-int DLLEXPORT EN_getqualinfo(EN_Project ph, EN_QualityType *qualType, char *chemName,
+int EN_getqualinfo(EN_Project ph, EN_QualityType *qualType, char *chemName,
                              char *chemUnits, int *traceNode)
 /*----------------------------------------------------------------
 **  Input:   none
@@ -1635,7 +1652,7 @@ int DLLEXPORT EN_getqualinfo(EN_Project ph, EN_QualityType *qualType, char *chem
     return 0;
 }
 
-int DLLEXPORT EN_getqualtype(EN_Project ph, EN_QualityType *qualType, int *traceNode)
+int EN_getqualtype(EN_Project ph, EN_QualityType *qualType, int *traceNode)
 /*----------------------------------------------------------------
 **  Input:   none
 **  Output:  qualType = type of quality analysis to run (see EN_QualityType)
@@ -1653,7 +1670,7 @@ int DLLEXPORT EN_getqualtype(EN_Project ph, EN_QualityType *qualType, int *trace
     return 0;
 }
 
-int  DLLEXPORT EN_setqualtype(EN_Project ph, EN_QualityType qualType, char *chemName,
+int  EN_setqualtype(EN_Project ph, EN_QualityType qualType, char *chemName,
                               char *chemUnits, char *traceNode)
 /*----------------------------------------------------------------
 **  Input:   qualType = type of quality analysis to run (see EN_QualityType)
@@ -1733,7 +1750,7 @@ int  DLLEXPORT EN_setqualtype(EN_Project ph, EN_QualityType qualType, char *chem
 
 ********************************************************************/
 
- int DLLEXPORT EN_addnode(EN_Project ph, char *id, EN_NodeType nodeType, int *index)
+int EN_addnode(EN_Project ph, char *id, EN_NodeType nodeType, int *index)
 /*----------------------------------------------------------------
 **  Input:   id = node ID name
 **           nodeType = type of node (see EN_NodeType)
@@ -1866,7 +1883,7 @@ int  DLLEXPORT EN_setqualtype(EN_Project ph, EN_QualityType qualType, char *chem
     return 0;
 }
 
-  int DLLEXPORT EN_deletenode(EN_Project ph, int index, EN_ActionCodeType actionCode)
+int EN_deletenode(EN_Project ph, int index, EN_ActionCodeType actionCode)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the node to delete
 **           actionCode = how to treat controls that contain the link
@@ -1981,7 +1998,7 @@ int  DLLEXPORT EN_setqualtype(EN_Project ph, EN_QualityType qualType, char *chem
     return 0;
 }
 
-int DLLEXPORT EN_getnodeindex(EN_Project ph, char *id, int *index)
+int EN_getnodeindex(EN_Project ph, char *id, int *index)
 /*----------------------------------------------------------------
 **  Input:   id = node ID name
 **  Output:  index = node index
@@ -1997,7 +2014,7 @@ int DLLEXPORT EN_getnodeindex(EN_Project ph, char *id, int *index)
     else return 0;
 }
 
-int DLLEXPORT EN_getnodeid(EN_Project ph, int index, char *id)
+int EN_getnodeid(EN_Project ph, int index, char *id)
 /*----------------------------------------------------------------
 **  Input:   index = node index
 **  Output:  id = node ID name
@@ -2013,7 +2030,7 @@ int DLLEXPORT EN_getnodeid(EN_Project ph, int index, char *id)
     return 0;
 }
 
-int DLLEXPORT EN_setnodeid(EN_Project ph, int index, char *newid)
+int EN_setnodeid(EN_Project ph, int index, char *newid)
 /*----------------------------------------------------------------
 **  Input:   index = node index
 **           newid = new node ID name
@@ -2039,7 +2056,7 @@ int DLLEXPORT EN_setnodeid(EN_Project ph, int index, char *newid)
     return 0;
 }
 
-int DLLEXPORT EN_getnodetype(EN_Project ph, int index, EN_NodeType *nodeType)
+int EN_getnodetype(EN_Project ph, int index, EN_NodeType *nodeType)
 /*----------------------------------------------------------------
 **  Input:   index = node index
 **  Output:  nodeType  = node type (see EN_NodeType)
@@ -2063,7 +2080,7 @@ int DLLEXPORT EN_getnodetype(EN_Project ph, int index, EN_NodeType *nodeType)
     return 0;
 }
 
-int  DLLEXPORT EN_getnodevalue(EN_Project ph, int index, EN_NodeProperty property, double *value)
+int  EN_getnodevalue(EN_Project ph, int index, EN_NodeProperty property, double *value)
 /*----------------------------------------------------------------
 **  Input:   index = node index
 **           property = node property code (see EN_NodeProperty)
@@ -2256,7 +2273,7 @@ int  DLLEXPORT EN_getnodevalue(EN_Project ph, int index, EN_NodeProperty propert
     return 0;
 }
 
-int DLLEXPORT EN_setnodevalue(EN_Project ph, int index, EN_NodeProperty property, double value)
+int EN_setnodevalue(EN_Project ph, int index, EN_NodeProperty property, double value)
 /*----------------------------------------------------------------
 **  Input:   index = node index
 **           property  = node property code (see EN_NodeProperty)
@@ -2558,7 +2575,7 @@ int DLLEXPORT EN_setnodevalue(EN_Project ph, int index, EN_NodeProperty property
     return 0;
 }
 
-int DLLEXPORT EN_setjuncdata(EN_Project ph, int index, double elev,
+int EN_setjuncdata(EN_Project ph, int index, double elev,
                              double dmnd, char *dmndpat)
 /*----------------------------------------------------------------
 **  Input:   index = junction node index
@@ -2601,7 +2618,7 @@ int DLLEXPORT EN_setjuncdata(EN_Project ph, int index, double elev,
     return 0;
 }
 
-int DLLEXPORT EN_settankdata(EN_Project ph, int index, double elev,
+int EN_settankdata(EN_Project ph, int index, double elev,
                              double initlvl, double minlvl,
                              double maxlvl, double diam,
                              double minvol, char *volcurve)
@@ -2678,7 +2695,7 @@ int DLLEXPORT EN_settankdata(EN_Project ph, int index, double elev,
     return 0;
 }
 
-int DLLEXPORT EN_getcoord(EN_Project ph, int index, double *x, double *y)
+int EN_getcoord(EN_Project ph, int index, double *x, double *y)
 /*----------------------------------------------------------------
 **  Input:   index = node index
 **  Output:  x = node x-coordinate
@@ -2704,7 +2721,7 @@ int DLLEXPORT EN_getcoord(EN_Project ph, int index, double *x, double *y)
     return 0;
 }
 
-int DLLEXPORT EN_setcoord(EN_Project ph, int index, double x, double y)
+int EN_setcoord(EN_Project ph, int index, double x, double y)
 /*----------------------------------------------------------------
 **  Input:   index = node index
 **           x = node x-coordinate
@@ -2732,7 +2749,7 @@ int DLLEXPORT EN_setcoord(EN_Project ph, int index, double x, double y)
 
 ********************************************************************/
 
-int DLLEXPORT EN_getdemandmodel(EN_Project ph, EN_DemandModel *model, double *pmin,
+int EN_getdemandmodel(EN_Project ph, EN_DemandModel *model, double *pmin,
                                 double *preq, double *pexp)
 /*----------------------------------------------------------------
 **  Input:   none
@@ -2752,7 +2769,7 @@ int DLLEXPORT EN_getdemandmodel(EN_Project ph, EN_DemandModel *model, double *pm
     return 0;
 }
 
-int DLLEXPORT EN_setdemandmodel(EN_Project ph, EN_DemandModel model, double pmin,
+int EN_setdemandmodel(EN_Project ph, EN_DemandModel model, double pmin,
                                 double preq, double pexp)
 /*----------------------------------------------------------------
 **  Input:   model = type of demand model (see EN_DemandModel)
@@ -2779,7 +2796,7 @@ int DLLEXPORT EN_setdemandmodel(EN_Project ph, EN_DemandModel model, double pmin
     return 0;
 }
 
-int  DLLEXPORT EN_adddemand(EN_Project ph, int nodeIndex, double baseDemand,
+int  EN_adddemand(EN_Project ph, int nodeIndex, double baseDemand,
                             const char *demandPattern, const char *demandName)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
@@ -2811,7 +2828,7 @@ int  DLLEXPORT EN_adddemand(EN_Project ph, int nodeIndex, double baseDemand,
     return 0;
 }
 
-int DLLEXPORT EN_deletedemand(EN_Project ph, int nodeIndex, int demandIndex)
+int EN_deletedemand(EN_Project ph, int nodeIndex, int demandIndex)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
 **           demandIndex = index of node's demand to be deleted
@@ -2867,7 +2884,7 @@ int DLLEXPORT EN_deletedemand(EN_Project ph, int nodeIndex, int demandIndex)
     return 0;
 }
 
-int DLLEXPORT EN_getdemandindex(EN_Project ph, int nodeIndex, const char *demandName,
+int EN_getdemandindex(EN_Project ph, int nodeIndex, const char *demandName,
                                 int *demandIndex)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
@@ -2911,7 +2928,7 @@ int DLLEXPORT EN_getdemandindex(EN_Project ph, int nodeIndex, const char *demand
     return 0;
 }
 
-int DLLEXPORT EN_getnumdemands(EN_Project ph, int nodeIndex, int *numDemands)
+int EN_getnumdemands(EN_Project ph, int nodeIndex, int *numDemands)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
 **  Output:  numDemands  = number of demand categories
@@ -2933,7 +2950,7 @@ int DLLEXPORT EN_getnumdemands(EN_Project ph, int nodeIndex, int *numDemands)
     return 0;
 }
 
-int DLLEXPORT EN_getbasedemand(EN_Project ph, int nodeIndex, int demandIndex,
+int EN_getbasedemand(EN_Project ph, int nodeIndex, int demandIndex,
                                double *baseDemand)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
@@ -2960,7 +2977,7 @@ int DLLEXPORT EN_getbasedemand(EN_Project ph, int nodeIndex, int demandIndex,
     return 0;
 }
 
-int DLLEXPORT EN_setbasedemand(EN_Project ph, int nodeIndex, int demandIndex,
+int EN_setbasedemand(EN_Project ph, int nodeIndex, int demandIndex,
                                double baseDemand)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
@@ -2987,7 +3004,7 @@ int DLLEXPORT EN_setbasedemand(EN_Project ph, int nodeIndex, int demandIndex,
     return 0;
 }
 
-int DLLEXPORT EN_getdemandname(EN_Project ph, int nodeIndex, int demandIndex,
+int EN_getdemandname(EN_Project ph, int nodeIndex, int demandIndex,
                                char *demandName)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
@@ -3015,7 +3032,7 @@ int DLLEXPORT EN_getdemandname(EN_Project ph, int nodeIndex, int demandIndex,
     return 0;
 }
 
-int DLLEXPORT EN_setdemandname(EN_Project ph, int nodeIndex, int demandIndex,
+int EN_setdemandname(EN_Project ph, int nodeIndex, int demandIndex,
                                const char *demandName)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
@@ -3042,7 +3059,7 @@ int DLLEXPORT EN_setdemandname(EN_Project ph, int nodeIndex, int demandIndex,
     return 0;
 }
 
-int DLLEXPORT EN_getdemandpattern(EN_Project ph, int nodeIndex, int demandIndex,
+int EN_getdemandpattern(EN_Project ph, int nodeIndex, int demandIndex,
                                   int *patIndex)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
@@ -3070,7 +3087,7 @@ int DLLEXPORT EN_getdemandpattern(EN_Project ph, int nodeIndex, int demandIndex,
     return 0;
 }
 
-int  DLLEXPORT EN_setdemandpattern(EN_Project ph, int nodeIndex, int demandIndex,
+int  EN_setdemandpattern(EN_Project ph, int nodeIndex, int demandIndex,
                                    int patIndex)
 /*----------------------------------------------------------------
 **  Input:   nodeIndex = node index
@@ -3106,7 +3123,7 @@ int  DLLEXPORT EN_setdemandpattern(EN_Project ph, int nodeIndex, int demandIndex
 
 ********************************************************************/
 
-int DLLEXPORT EN_addlink(EN_Project ph, char *id, EN_LinkType linkType,
+int EN_addlink(EN_Project ph, char *id, EN_LinkType linkType,
                          char *fromNode, char *toNode, int *index)
 /*----------------------------------------------------------------
 **  Input:   id = link ID name
@@ -3249,7 +3266,7 @@ int DLLEXPORT EN_addlink(EN_Project ph, char *id, EN_LinkType linkType,
     return 0;
 }
 
-int DLLEXPORT EN_deletelink(EN_Project ph, int index, EN_ActionCodeType actionCode)
+int EN_deletelink(EN_Project ph, int index, EN_ActionCodeType actionCode)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the link to delete
 **           actionCode = how to treat controls that contain the link:
@@ -3356,7 +3373,7 @@ int DLLEXPORT EN_deletelink(EN_Project ph, int index, EN_ActionCodeType actionCo
     return 0;
 }
 
-int DLLEXPORT EN_getlinkindex(EN_Project ph, char *id, int *index)
+int EN_getlinkindex(EN_Project ph, char *id, int *index)
 /*----------------------------------------------------------------
 **  Input:   id = link ID name
 **  Output:  index = link index
@@ -3372,7 +3389,7 @@ int DLLEXPORT EN_getlinkindex(EN_Project ph, char *id, int *index)
     else return 0;
 }
 
-int DLLEXPORT EN_getlinkid(EN_Project ph, int index, char *id)
+int EN_getlinkid(EN_Project ph, int index, char *id)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **  Output:  id = link ID name
@@ -3388,7 +3405,7 @@ int DLLEXPORT EN_getlinkid(EN_Project ph, int index, char *id)
     return 0;
 }
 
-int DLLEXPORT EN_setlinkid(EN_Project ph, int index, char *newid)
+int EN_setlinkid(EN_Project ph, int index, char *newid)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **           id = link ID name
@@ -3414,7 +3431,7 @@ int DLLEXPORT EN_setlinkid(EN_Project ph, int index, char *newid)
     return 0;
 }
 
-int DLLEXPORT EN_getlinktype(EN_Project ph, int index, EN_LinkType *linkType)
+int EN_getlinktype(EN_Project ph, int index, EN_LinkType *linkType)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **  Output:  type = link type (see EN_LinkType)
@@ -3430,7 +3447,7 @@ int DLLEXPORT EN_getlinktype(EN_Project ph, int index, EN_LinkType *linkType)
     return 0;
 }
 
-int DLLEXPORT EN_setlinktype(EN_Project ph, int *index, EN_LinkType linkType, EN_ActionCodeType actionCode)
+int EN_setlinktype(EN_Project ph, int *index, EN_LinkType linkType, EN_ActionCodeType actionCode)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **           linkType = new link type (see EN_LinkType)
@@ -3504,7 +3521,7 @@ int DLLEXPORT EN_setlinktype(EN_Project ph, int *index, EN_LinkType linkType, EN
     return errcode;
 }
 
-int DLLEXPORT EN_getlinknodes(EN_Project ph, int index, int *node1, int *node2)
+int EN_getlinknodes(EN_Project ph, int index, int *node1, int *node2)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **  Output:  node1 = index of link's starting node
@@ -3523,7 +3540,7 @@ int DLLEXPORT EN_getlinknodes(EN_Project ph, int index, int *node1, int *node2)
     return 0;
 }
 
-int DLLEXPORT EN_setlinknodes(EN_Project ph, int index, int node1, int node2)
+int EN_setlinknodes(EN_Project ph, int index, int node1, int node2)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **           node1 = index of link's new starting node
@@ -3567,7 +3584,7 @@ int DLLEXPORT EN_setlinknodes(EN_Project ph, int index, int node1, int node2)
     return 0;
 }
 
-int DLLEXPORT EN_getlinkvalue(EN_Project ph, int index, EN_LinkProperty property, double *value)
+int EN_getlinkvalue(EN_Project ph, int index, EN_LinkProperty property, double *value)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **           property = link property code (see EN_LinkProperty)
@@ -3788,7 +3805,7 @@ int DLLEXPORT EN_getlinkvalue(EN_Project ph, int index, EN_LinkProperty property
     return 0;
 }
 
-int DLLEXPORT EN_setlinkvalue(EN_Project ph, int index, EN_LinkProperty property, double value)
+int EN_setlinkvalue(EN_Project ph, int index, EN_LinkProperty property, double value)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **           property  = link property code (see EN_LinkProperty)
@@ -3994,7 +4011,7 @@ int DLLEXPORT EN_setlinkvalue(EN_Project ph, int index, EN_LinkProperty property
     return 0;
 }
 
-int DLLEXPORT EN_setpipedata(EN_Project ph, int index, double length,
+int EN_setpipedata(EN_Project ph, int index, double length,
                              double diam, double rough, double mloss)
 /*----------------------------------------------------------------
 **  Input:   index = pipe link index
@@ -4035,7 +4052,7 @@ int DLLEXPORT EN_setpipedata(EN_Project ph, int index, double length,
     return 0;
 }
 
-int DLLEXPORT EN_getvertexcount(EN_Project ph, int index, int *count)
+int EN_getvertexcount(EN_Project ph, int index, int *count)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **  Output:  count = number of link's vertex points
@@ -4060,7 +4077,7 @@ int DLLEXPORT EN_getvertexcount(EN_Project ph, int index, int *count)
     return 0;
 }
 
-int DLLEXPORT EN_getvertex(EN_Project ph, int index, int vertex, double *x, double *y)
+int EN_getvertex(EN_Project ph, int index, int vertex, double *x, double *y)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **           vertex = index of a link vertex point
@@ -4091,7 +4108,7 @@ int DLLEXPORT EN_getvertex(EN_Project ph, int index, int vertex, double *x, doub
     return 0;
 }
 
-int DLLEXPORT EN_setvertices(EN_Project ph, int index, double *x, double *y, int count)
+int EN_setvertices(EN_Project ph, int index, double *x, double *y, int count)
 /*----------------------------------------------------------------
 **  Input:   index = link index
 **           x = array of X-coordinates for vertex points
@@ -4132,7 +4149,7 @@ int DLLEXPORT EN_setvertices(EN_Project ph, int index, double *x, double *y, int
 
 ********************************************************************/
 
-int DLLEXPORT EN_getpumptype(EN_Project ph, int linkIndex, EN_PumpType *pumpType)
+int EN_getpumptype(EN_Project ph, int linkIndex, EN_PumpType *pumpType)
 /*----------------------------------------------------------------
 **  Input:   linkIndex = index of a pump link
 **  Output:  type = type of pump head curve (see EN_PumpType)
@@ -4155,7 +4172,7 @@ int DLLEXPORT EN_getpumptype(EN_Project ph, int linkIndex, EN_PumpType *pumpType
     return 0;
 }
 
-int DLLEXPORT EN_getheadcurveindex(EN_Project ph, int linkIndex, int *curveIndex)
+int EN_getheadcurveindex(EN_Project ph, int linkIndex, int *curveIndex)
 /*----------------------------------------------------------------
 **  Input:   linkIndex = index of a pump link
 **  Output:  curveIndex = index of a pump's head curve
@@ -4178,7 +4195,7 @@ int DLLEXPORT EN_getheadcurveindex(EN_Project ph, int linkIndex, int *curveIndex
     return 0;
 }
 
-int DLLEXPORT EN_setheadcurveindex(EN_Project ph, int linkIndex, int curveIndex)
+int EN_setheadcurveindex(EN_Project ph, int linkIndex, int curveIndex)
 /*----------------------------------------------------------------
 **  Input:   linkIndex = index of a pump link
 **           curveIndex = index of a curve
@@ -4248,7 +4265,7 @@ int DLLEXPORT EN_setheadcurveindex(EN_Project ph, int linkIndex, int curveIndex)
 
 ********************************************************************/
 
-int DLLEXPORT EN_addpattern(EN_Project ph, char *id)
+int EN_addpattern(EN_Project ph, char *id)
 /*----------------------------------------------------------------
 **  Input:   id = time pattern ID name
 **  Output:  none
@@ -4296,7 +4313,7 @@ int DLLEXPORT EN_addpattern(EN_Project ph, char *id)
     return 0;
 }
 
-int  DLLEXPORT EN_deletepattern(EN_Project ph, int index)
+int EN_deletepattern(EN_Project ph, int index)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the pattern to delete
 **  Output:  none
@@ -4336,7 +4353,7 @@ int  DLLEXPORT EN_deletepattern(EN_Project ph, int index)
     return 0;
 }
 
-int DLLEXPORT EN_getpatternindex(EN_Project ph, const char *id, int *index)
+int EN_getpatternindex(EN_Project ph, const char *id, int *index)
 /*----------------------------------------------------------------
 **  Input:   id = time pattern name
 **  Output:  index = time pattern index
@@ -4361,7 +4378,7 @@ int DLLEXPORT EN_getpatternindex(EN_Project ph, const char *id, int *index)
     return 205;
 }
 
-int DLLEXPORT EN_getpatternid(EN_Project ph, int index, char *id)
+int EN_getpatternid(EN_Project ph, int index, char *id)
 /*----------------------------------------------------------------
 **  Input:   index = time pattern index
 **  Output:  id = time pattern ID name
@@ -4377,7 +4394,7 @@ int DLLEXPORT EN_getpatternid(EN_Project ph, int index, char *id)
     return 0;
 }
 
-int DLLEXPORT EN_setpatternid(EN_Project ph, int index, char *id)
+int EN_setpatternid(EN_Project ph, int index, char *id)
 /*----------------------------------------------------------------
 **  Input:   index = time pattern index
 **           id = time pattern ID name
@@ -4402,7 +4419,7 @@ int DLLEXPORT EN_setpatternid(EN_Project ph, int index, char *id)
     return 0;
 }
 
-int DLLEXPORT EN_getpatternlen(EN_Project ph, int index, int *len)
+int EN_getpatternlen(EN_Project ph, int index, int *len)
 /*----------------------------------------------------------------
 **  Input:   index = time pattern index
 **  Output:  len = number of periods in a time pattern
@@ -4417,7 +4434,7 @@ int DLLEXPORT EN_getpatternlen(EN_Project ph, int index, int *len)
     return 0;
 }
 
-int DLLEXPORT EN_getpatternvalue(EN_Project ph, int index, int period, double *value)
+int EN_getpatternvalue(EN_Project ph, int index, int period, double *value)
 /*----------------------------------------------------------------
 **  Input:   index = time pattern index
 **           period = time pattern period
@@ -4436,7 +4453,7 @@ int DLLEXPORT EN_getpatternvalue(EN_Project ph, int index, int period, double *v
     return 0;
 }
 
-int DLLEXPORT EN_setpatternvalue(EN_Project ph, int index, int period, double value)
+int EN_setpatternvalue(EN_Project ph, int index, int period, double value)
 /*----------------------------------------------------------------
 **  Input:   index = time pattern index
 **           period = time pattern period
@@ -4458,7 +4475,7 @@ int DLLEXPORT EN_setpatternvalue(EN_Project ph, int index, int period, double va
     return 0;
 }
 
-int DLLEXPORT EN_getaveragepatternvalue(EN_Project ph, int index, double *value)
+int EN_getaveragepatternvalue(EN_Project ph, int index, double *value)
 /*----------------------------------------------------------------
 **  Input:   index = time pattern index
 **  Output:  value = average of a time pattern's factors
@@ -4483,7 +4500,7 @@ int DLLEXPORT EN_getaveragepatternvalue(EN_Project ph, int index, double *value)
     return 0;
 }
 
-int DLLEXPORT EN_setpattern(EN_Project ph, int index, double *values, int len)
+int EN_setpattern(EN_Project ph, int index, double *values, int len)
 /*----------------------------------------------------------------
 **  Input:   index = time pattern index
 **           values = an array of pattern factor values
@@ -4521,7 +4538,7 @@ int DLLEXPORT EN_setpattern(EN_Project ph, int index, double *values, int len)
 
 ********************************************************************/
 
-int DLLEXPORT EN_addcurve(EN_Project ph, char *id)
+int EN_addcurve(EN_Project ph, char *id)
 /*----------------------------------------------------------------
 **  Input:   id = data curve ID name
 **  Output:  none
@@ -4577,7 +4594,7 @@ int DLLEXPORT EN_addcurve(EN_Project ph, char *id)
     return 0;
 }
 
-int  DLLEXPORT EN_deletecurve(EN_Project ph, int index)
+int  EN_deletecurve(EN_Project ph, int index)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the curve to delete
 **  Output:  none
@@ -4613,7 +4630,7 @@ int  DLLEXPORT EN_deletecurve(EN_Project ph, int index)
     return 0;
 }
 
-int DLLEXPORT EN_getcurveindex(EN_Project ph, char *id, int *index)
+int EN_getcurveindex(EN_Project ph, char *id, int *index)
 /*----------------------------------------------------------------
 **  Input:   id = data curve name
 **  Output:  index = data curve index
@@ -4629,7 +4646,7 @@ int DLLEXPORT EN_getcurveindex(EN_Project ph, char *id, int *index)
     return 0;
 }
 
-int DLLEXPORT EN_getcurveid(EN_Project ph, int index, char *id)
+int EN_getcurveid(EN_Project ph, int index, char *id)
 /*----------------------------------------------------------------
 **  Input:   index = data curve index
 **  Output:  id = data curve ID name
@@ -4645,7 +4662,7 @@ int DLLEXPORT EN_getcurveid(EN_Project ph, int index, char *id)
     return 0;
 }
 
-int DLLEXPORT EN_setcurveid(EN_Project ph, int index, char *id)
+int EN_setcurveid(EN_Project ph, int index, char *id)
 /*----------------------------------------------------------------
 **  Input:   index = data curve index
 **           id = data curve ID name
@@ -4670,7 +4687,7 @@ int DLLEXPORT EN_setcurveid(EN_Project ph, int index, char *id)
     return 0;
 }
 
-int DLLEXPORT EN_getcurvelen(EN_Project ph, int index, int *len)
+int EN_getcurvelen(EN_Project ph, int index, int *len)
 /*----------------------------------------------------------------
 **  Input:   index = data curve index
 **  Output:  len = number of points in a data curve
@@ -4685,7 +4702,7 @@ int DLLEXPORT EN_getcurvelen(EN_Project ph, int index, int *len)
     return 0;
 }
 
-int DLLEXPORT EN_getcurvetype(EN_Project ph, int index, EN_CurveType *type)
+int EN_getcurvetype(EN_Project ph, int index, EN_CurveType *type)
 /*----------------------------------------------------------------
 **  Input:   index = data curve index
 **  Output:  type = type of data curve (see EN_CurveType)
@@ -4701,7 +4718,7 @@ int DLLEXPORT EN_getcurvetype(EN_Project ph, int index, EN_CurveType *type)
     return 0;
 }
 
-int DLLEXPORT EN_getcurvevalue(EN_Project ph, int curveIndex, int pointIndex,
+int EN_getcurvevalue(EN_Project ph, int curveIndex, int pointIndex,
                                double *x, double *y)
 /*----------------------------------------------------------------
 **  Input:   curveIndex = data curve index
@@ -4723,7 +4740,7 @@ int DLLEXPORT EN_getcurvevalue(EN_Project ph, int curveIndex, int pointIndex,
     return 0;
 }
 
-int DLLEXPORT EN_setcurvevalue(EN_Project ph, int curveIndex, int pointIndex,
+int EN_setcurvevalue(EN_Project ph, int curveIndex, int pointIndex,
                                double x, double y)
 /*----------------------------------------------------------------
 **  Input:   curveIndex = data curve index
@@ -4775,7 +4792,7 @@ int DLLEXPORT EN_setcurvevalue(EN_Project ph, int curveIndex, int pointIndex,
     return adjustpumpparams(ph, curveIndex);
 }
 
-int DLLEXPORT EN_getcurve(EN_Project ph, int index, char *id, int *nPoints,
+int EN_getcurve(EN_Project ph, int index, char *id, int *nPoints,
                           double *xValues, double *yValues)
 /*----------------------------------------------------------------
 **  Input:   index = data curve index
@@ -4808,7 +4825,7 @@ int DLLEXPORT EN_getcurve(EN_Project ph, int index, char *id, int *nPoints,
     return 0;
 }
 
-int DLLEXPORT EN_setcurve(EN_Project ph, int index, double *xValues,
+int EN_setcurve(EN_Project ph, int index, double *xValues,
                           double *yValues, int nPoints)
 /*----------------------------------------------------------------
 **  Input:   index = data curve index
@@ -4855,7 +4872,7 @@ int DLLEXPORT EN_setcurve(EN_Project ph, int index, double *xValues,
 
 ********************************************************************/
 
-int DLLEXPORT EN_addcontrol(EN_Project ph, EN_ControlType type, int linkIndex, double setting,
+int EN_addcontrol(EN_Project ph, EN_ControlType type, int linkIndex, double setting,
               int nodeIndex, double level, int *index)
 /*----------------------------------------------------------------
 **  Input:   type = type of control (see EN_ControlType)
@@ -4956,7 +4973,7 @@ int DLLEXPORT EN_addcontrol(EN_Project ph, EN_ControlType type, int linkIndex, d
     return 0;
 }
 
-int DLLEXPORT EN_deletecontrol(EN_Project ph, int index)
+int EN_deletecontrol(EN_Project ph, int index)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the control
 **  Output:  none
@@ -4977,7 +4994,7 @@ int DLLEXPORT EN_deletecontrol(EN_Project ph, int index)
     return 0;
 }
 
-int DLLEXPORT EN_getcontrol(EN_Project ph, int index, EN_ControlType *type,
+int EN_getcontrol(EN_Project ph, int index, EN_ControlType *type,
                 int *linkIndex, double *setting, int *nodeIndex, double *level)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the control
@@ -5060,7 +5077,7 @@ int DLLEXPORT EN_getcontrol(EN_Project ph, int index, EN_ControlType *type,
     return 0;
 }
 
-int DLLEXPORT EN_setcontrol(EN_Project ph, int index, EN_ControlType type, int linkIndex,
+int EN_setcontrol(EN_Project ph, int index, EN_ControlType type, int linkIndex,
                             double setting, int nodeIndex, double level)
 /*----------------------------------------------------------------
 **  Input:   index  = index of the control
@@ -5162,7 +5179,7 @@ int DLLEXPORT EN_setcontrol(EN_Project ph, int index, EN_ControlType type, int l
 
 ********************************************************************/
 
-int DLLEXPORT EN_addrule(EN_Project ph, char *rule)
+int EN_addrule(EN_Project ph, char *rule)
 /*----------------------------------------------------------------
 **  Input:   rule = text of rule being added in the format
 **           used for the [RULES] section of an EPANET input file
@@ -5218,7 +5235,7 @@ int DLLEXPORT EN_addrule(EN_Project ph, char *rule)
     return rules->Errcode;
 }
 
-int DLLEXPORT EN_deleterule(EN_Project ph, int index)
+int EN_deleterule(EN_Project ph, int index)
 /*----------------------------------------------------------------
 **  Input:   index = rule index
 **  Output:  none
@@ -5232,7 +5249,7 @@ int DLLEXPORT EN_deleterule(EN_Project ph, int index)
     return 0;
 }
 
-int DLLEXPORT EN_getrule(EN_Project ph, int index, int *nPremises,
+int EN_getrule(EN_Project ph, int index, int *nPremises,
                          int *nThenActions, int *nElseActions,
                          double *priority)
 /*----------------------------------------------------------------
@@ -5284,7 +5301,7 @@ int DLLEXPORT EN_getrule(EN_Project ph, int index, int *nPremises,
     return 0;
 }
 
-int DLLEXPORT EN_getruleID(EN_Project ph, int index, char *id)
+int EN_getruleID(EN_Project ph, int index, char *id)
 /*----------------------------------------------------------------
 **  Input:   index = rule index
 **  Output:  id = rule ID label
@@ -5300,7 +5317,7 @@ int DLLEXPORT EN_getruleID(EN_Project ph, int index, char *id)
     return 0;
 }
 
-int  DLLEXPORT EN_getpremise(EN_Project ph, int ruleIndex, int premiseIndex,
+int  EN_getpremise(EN_Project ph, int ruleIndex, int premiseIndex,
                int *logop, EN_RuleObject *object, int *objIndex, EN_RuleVariable *variable,
                EN_RuleOperator *relop, EN_RuleStatus *status, double *value)
 /*----------------------------------------------------------------
@@ -5338,7 +5355,7 @@ int  DLLEXPORT EN_getpremise(EN_Project ph, int ruleIndex, int premiseIndex,
 }
 
 
-int DLLEXPORT EN_setpremise(EN_Project ph, int ruleIndex, int premiseIndex,
+int EN_setpremise(EN_Project ph, int ruleIndex, int premiseIndex,
               int logop, EN_RuleObject object, int objIndex, EN_RuleVariable variable,
               EN_RuleOperator relop, EN_RuleStatus status, double value)
 /*----------------------------------------------------------------
@@ -5376,7 +5393,7 @@ int DLLEXPORT EN_setpremise(EN_Project ph, int ruleIndex, int premiseIndex,
     return 0;
 }
 
-int DLLEXPORT EN_setpremiseindex(EN_Project ph, int ruleIndex, int premiseIndex,
+int EN_setpremiseindex(EN_Project ph, int ruleIndex, int premiseIndex,
                                  int objIndex)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
@@ -5401,7 +5418,7 @@ int DLLEXPORT EN_setpremiseindex(EN_Project ph, int ruleIndex, int premiseIndex,
     return 0;
 }
 
-int DLLEXPORT EN_setpremisestatus(EN_Project ph, int ruleIndex, int premiseIndex, EN_RuleStatus status)
+int EN_setpremisestatus(EN_Project ph, int ruleIndex, int premiseIndex, EN_RuleStatus status)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
 **           premiseIndex = premise index
@@ -5427,7 +5444,7 @@ int DLLEXPORT EN_setpremisestatus(EN_Project ph, int ruleIndex, int premiseIndex
     return 0;
 }
 
-int DLLEXPORT EN_setpremisevalue(EN_Project ph, int ruleIndex, int premiseIndex, double value)
+int EN_setpremisevalue(EN_Project ph, int ruleIndex, int premiseIndex, double value)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
 **           premiseIndex = premise index
@@ -5452,7 +5469,7 @@ int DLLEXPORT EN_setpremisevalue(EN_Project ph, int ruleIndex, int premiseIndex,
     return 0;
 }
 
-int DLLEXPORT EN_getthenaction(EN_Project ph, int ruleIndex, int actionIndex,
+int EN_getthenaction(EN_Project ph, int ruleIndex, int actionIndex,
                                int *linkIndex, EN_RuleStatus *status, double *setting)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
@@ -5480,7 +5497,7 @@ int DLLEXPORT EN_getthenaction(EN_Project ph, int ruleIndex, int actionIndex,
     return 0;
 }
 
-int DLLEXPORT EN_setthenaction(EN_Project ph, int ruleIndex, int actionIndex,
+int EN_setthenaction(EN_Project ph, int ruleIndex, int actionIndex,
                                int linkIndex,  EN_RuleStatus status, double setting)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
@@ -5508,7 +5525,7 @@ int DLLEXPORT EN_setthenaction(EN_Project ph, int ruleIndex, int actionIndex,
     return 0;
 }
 
-int DLLEXPORT EN_getelseaction(EN_Project ph, int ruleIndex, int actionIndex,
+int EN_getelseaction(EN_Project ph, int ruleIndex, int actionIndex,
                                int *linkIndex, EN_RuleStatus *status, double *setting)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
@@ -5536,7 +5553,7 @@ int DLLEXPORT EN_getelseaction(EN_Project ph, int ruleIndex, int actionIndex,
   return 0;
 }
 
-int DLLEXPORT EN_setelseaction(EN_Project ph, int ruleIndex, int actionIndex,
+int EN_setelseaction(EN_Project ph, int ruleIndex, int actionIndex,
                                int linkIndex,  EN_RuleStatus status, double setting)
 /*----------------------------------------------------------------
 **  Input:   ruleIndex = rule index
@@ -5564,7 +5581,7 @@ int DLLEXPORT EN_setelseaction(EN_Project ph, int ruleIndex, int actionIndex,
   return 0;
 }
 
-int DLLEXPORT EN_setrulepriority(EN_Project ph, int index, double priority)
+int EN_setrulepriority(EN_Project ph, int index, double priority)
 /*-----------------------------------------------------------------------------
 **  Input:   index  = rule index
 **           priority = rule priority level

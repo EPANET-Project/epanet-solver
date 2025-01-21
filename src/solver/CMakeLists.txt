@@ -1,7 +1,8 @@
 #
 # CMakeLists.txt - CMake configuration file for epanet/src/solver
 #
-# Date Created: 9/17/2019
+# Date Created: Sep 17, 2019
+# Date Updated: Jan 21, 2015
 #
 # Author: Michael E. Tryby
 #         US EPA - ORD/NRMRL
@@ -11,7 +12,7 @@
 set(EPANET_PUBLIC_HEADERS
     include/epanet2_2.h
     include/epanet2_enums.h
-  #  include/epanet2.h
+    # include/epanet2.h
 )
 
 set(EPANET_PRIVATE_HEADERS
@@ -24,8 +25,8 @@ set(EPANET_PRIVATE_HEADERS
 )
 
 set(EPANET_SOURCES
-    epanet.c
-    epanet2.c
+    # epanet.c
+    epanet2_2.c
     errors.dat
     genmmd.c
     hash.c
@@ -58,76 +59,83 @@ source_group("Library"
 
 
 # create build target for code coverage
-if(BUILD_COVERAGE)
+# if(BUILD_COVERAGE)
 
-  include(CodeCoverage)
-  set(CMAKE_BUILD_TYPE "Debug")
-  APPEND_COVERAGE_COMPILER_FLAGS()
-  set(CMAKE_C_FLAGS_DEBUG "-O0")
+#   include(CodeCoverage)
+#   set(CMAKE_BUILD_TYPE "Debug")
+#   APPEND_COVERAGE_COMPILER_FLAGS()
+#   set(CMAKE_C_FLAGS_DEBUG "-O0")
 
-  add_library(epanet2
+#   add_library(epanet2
+#     SHARED
+#         ${EPANET_PRIVATE_HEADERS}
+#         ${EPANET_SOURCES}
+#   )
+
+# create build target for default epanet library with 2.0 and 2.2 API
+# else()
+
+# Build modern 64 bit version of the library
+# 1if("${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR NOT MSVC)
+add_library(
+  epanet2
     SHARED
         ${EPANET_PRIVATE_HEADERS}
         ${EPANET_SOURCES}
-  )
+)
 
-# create build target for default epanet library with 2.0 and 2.2 API
-else()
+# Build legacy 32 bit version of the library with def file interface
+# else()
+#   add_library(epanet2
+#       SHARED
+#           ${EPANET_PRIVATE_HEADERS}
+#           ${EPANET_SOURCES}
+#           ${PROJECT_SOURCE_DIR}/bindings/epanet2.def
+#   )
+#   set_source_files_properties(${PROJECT_SOURCE_DIR}/bindings/epanet2.def
+#       PROPERTIES_HEADER_FILE_ONLY TRUE
+#   )
 
-  # Build modern 64 bit version of the library
-  if("${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR NOT MSVC)
-    add_library(epanet2
-        SHARED
-            ${EPANET_PRIVATE_HEADERS}
-            ${EPANET_SOURCES}
-    )
+# endif()
+# endif()
 
-  # Build legacy 32 bit version of the library with def file interface
-  else()
-    add_library(epanet2
-        SHARED
-            ${EPANET_PRIVATE_HEADERS}
-            ${EPANET_SOURCES}
-            ${PROJECT_SOURCE_DIR}/bindings/epanet2.def
-    )
-    set_source_files_properties(${PROJECT_SOURCE_DIR}/bindings/epanet2.def
-        PROPERTIES_HEADER_FILE_ONLY TRUE
-    )
-
-  endif()
-endif()
-
-target_compile_options(epanet2
+target_compile_options(
+  epanet2
     PUBLIC
         "$<$<C_COMPILER_ID:MSVC>:"
             "$<$<CONFIG:Release>:/GL>"
         ">"
 )
 
-target_compile_definitions(epanet2
+target_compile_definitions(
+  epanet2
     PUBLIC
         "_CRT_SECURE_NO_DEPRECATE"
 )
 
-target_link_options(epanet2
+target_link_options(
+  epanet2
     PUBLIC
         "$<$<C_COMPILER_ID:MSVC>:"
             "$<$<CONFIG:Release>:/LTCG>"
         ">"
 )
 
-target_link_libraries(epanet2
+target_link_libraries(
+  epanet2
     PUBLIC
         $<$<NOT:$<BOOL:$<C_COMPILER_ID:MSVC>>>:m>
 )
 
-target_include_directories(epanet2
+target_include_directories(
+  epanet2
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${INCLUDE_DIST}>
 )
 
-set_target_properties(epanet2
+set_target_properties(
+  epanet2
     PROPERTIES
         MACOSX_RPATH TRUE
         SKIP_BUILD_RPATH FALSE
@@ -136,8 +144,32 @@ set_target_properties(epanet2
         INSTALL_RPATH_USE_LINK_PATH TRUE
 )
 
-install(TARGETS epanet2
-    EXPORT epanet2Targets
+
+include(GenerateExportHeader)
+generate_export_header(
+  epanet2
+    BASE_NAME
+        epanet2
+    EXPORT_MACRO_NAME
+        EXPORT_SOLVER
+    EXPORT_FILE_NAME
+        epanet2_export.h
+    STATIC_DEFINE
+        SHARED_EXPORTS_BUILT_AS_STATIC
+)
+
+file(
+    COPY
+        ${CMAKE_CURRENT_BINARY_DIR}/epanet2_export.h
+    DESTINATION
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+install(
+    TARGETS
+        epanet2
+    EXPORT
+        epanet2Targets
     RUNTIME
         DESTINATION "${TOOL_DIST}"
     LIBRARY
@@ -149,9 +181,13 @@ install(TARGETS epanet2
 )
 
 # Install target import scripts so other cmake projects can use epanet libraries
-install(EXPORT epanet2Targets
-    DESTINATION "${CONFIG_DIST}"
-    FILE epanet2-config.cmake
+install(
+    EXPORT
+        epanet2Targets
+    DESTINATION
+        "${CONFIG_DIST}"
+    FILE
+        epanet2-config.cmake
 )
 
 # Need to list files out individually otherwise it won't work
@@ -166,8 +202,11 @@ install(
 
 
 # copy epanet2 to build tree for testing
-add_custom_command(TARGET epanet2 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
+add_custom_command(
+    TARGET
+        epanet2 POST_BUILD
+    COMMAND
+        ${CMAKE_COMMAND} -E copy
         $<TARGET_FILE:epanet2>
         ${CMAKE_BINARY_DIR}/bin/$<CONFIGURATION>/$<TARGET_FILE_NAME:epanet2>
 )

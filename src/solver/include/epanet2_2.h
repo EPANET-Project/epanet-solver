@@ -18,25 +18,28 @@
 #ifndef EPANET2_2_H
 #define EPANET2_2_H
 
-#ifdef epanet_py_EXPORTS
-  #define DLLEXPORT
-#else
-  #ifndef DLLEXPORT
-    #ifdef _WIN32
-      #ifdef epanet2_EXPORTS
-        #define DLLEXPORT __declspec(dllexport) __stdcall
-      #else
-        #define DLLEXPORT __declspec(dllimport) __stdcall
-      #endif
-    #elif defined(__CYGWIN__)
-      #define DLLEXPORT __stdcall
-    #else
-      #define DLLEXPORT
-    #endif
-  #endif
-#endif
+// #ifdef epanet_py_EXPORTS
+//   #define EXPORT_SOLVER
+// #else
+//   #ifndef EXPORT_SOLVER
+//     #ifdef _WIN32
+//       #ifdef epanet2_EXPORTS
+//         #define EXPORT_SOLVER __declspec(EXPORT_SOLVER) __stdcall
+//       #else
+//         #define EXPORT_SOLVER __declspec(dllimport) __stdcall
+//       #endif
+//     #elif defined(__CYGWIN__)
+//       #define EXPORT_SOLVER __stdcall
+//     #else
+//       #define EXPORT_SOLVER
+//     #endif
+//   #endif
+// #endif
+
 
 #include "epanet2_enums.h"
+#include "epanet2_export.h"
+
 
 // --- Declare the EPANET toolkit functions
 #if defined(__cplusplus)
@@ -47,6 +50,11 @@ extern "C" {
  @brief The EPANET Project wrapper object
 */
 typedef struct Project *EN_Project;
+
+
+EXPORT_SOLVER int EN_epanet(const char *inpFile, const char *rptFile,
+                 const char *outFile, void (*pviewprog) (char *));
+
 
 /********************************************************************
 
@@ -71,7 +79,7 @@ These functions are used to manage a project.
 
   EN_createproject must be called before any other API functions are used.
   */
-  int DLLEXPORT EN_createproject(EN_Project *ph);
+  EXPORT_SOLVER int EN_createproject(EN_Project *ph);
 
   /**
   @brief Deletes a currently opened EPANET project.
@@ -80,7 +88,7 @@ These functions are used to manage a project.
 
   EN_deleteproject should be called after all network analysis has been completed.
   */
-  int DLLEXPORT EN_deleteproject(EN_Project ph);
+  EXPORT_SOLVER int EN_deleteproject(EN_Project ph);
 
   /**
   @brief Runs a complete EPANET simulation.
@@ -103,7 +111,7 @@ These functions are used to manage a project.
   It would be passed into EN_runproject as `&writeConsole`. If this feature is not needed then
   the pviewprog argument should be `NULL`.
   */
-  int DLLEXPORT EN_runproject(EN_Project ph, const char *inpFile, const char *rptFile,
+  EXPORT_SOLVER int EN_runproject(EN_Project ph, const char *inpFile, const char *rptFile,
                 const char *outFile, void (*pviewprog)(char *));
 
   /**
@@ -119,7 +127,7 @@ These functions are used to manage a project.
   file will not be used to supply network data. If the project receives it's network data
   from an input file then there is no need to call this function.
   */
-  int DLLEXPORT EN_init(EN_Project p, const char *rptFile, const char *outFile,
+  EXPORT_SOLVER int EN_init(EN_Project p, const char *rptFile, const char *outFile,
                 EN_FlowUnits unitsType, int headLossType);
 
   /**
@@ -133,7 +141,7 @@ These functions are used to manage a project.
   This function should be called immediately after ::EN_createproject if an EPANET-formatted
   input file will be used to supply network data.
   */
-  int DLLEXPORT EN_open(EN_Project ph, const char *inpFile, const char *rptFile,
+  EXPORT_SOLVER int EN_open(EN_Project ph, const char *inpFile, const char *rptFile,
                 const char *outFile);
 
   /**
@@ -144,7 +152,7 @@ These functions are used to manage a project.
   @param[out] out_line3 third title line
   @return an error code
   */
-  int  DLLEXPORT EN_gettitle(EN_Project ph, char *out_line1, char *out_line2, char *out_line3);
+  EXPORT_SOLVER int EN_gettitle(EN_Project ph, char *out_line1, char *out_line2, char *out_line3);
 
   /**
   @brief Sets the title lines of the project
@@ -154,7 +162,7 @@ These functions are used to manage a project.
   @param line3 third title line
   @return an error code
   */
-  int  DLLEXPORT EN_settitle(EN_Project ph, char *line1, char *line2, char *line3);
+  EXPORT_SOLVER int EN_settitle(EN_Project ph, char *line1, char *line2, char *line3);
 
   /**
   @brief Retrieves a descriptive comment assigned to a Node, Link, Pattern or Curve.
@@ -164,7 +172,7 @@ These functions are used to manage a project.
   @param[out] out_comment the comment string assigned to the object
   @return an error code
   */
-  int  DLLEXPORT EN_getcomment(EN_Project ph, EN_ObjectType object, int index, char *out_comment);
+  EXPORT_SOLVER int EN_getcomment(EN_Project ph, EN_ObjectType object, int index, char *out_comment);
 
   /**
   @brief Assigns a descriptive comment to a Node, Link, Pattern or Curve.
@@ -174,7 +182,7 @@ These functions are used to manage a project.
   @param[out] comment the comment string assigned to the object
   @return an error code
   */
-  int  DLLEXPORT EN_setcomment(EN_Project ph, EN_ObjectType object, int index, char *comment);
+  EXPORT_SOLVER int EN_setcomment(EN_Project ph, EN_ObjectType object, int index, char *comment);
 
   /**
   @brief Retrieves the number of objects of a given type in a project.
@@ -183,7 +191,7 @@ These functions are used to manage a project.
   @param[out] count number of objects of the specified type
   @return an error code
   */
-  int  DLLEXPORT EN_getcount(EN_Project ph, EN_CountType object, int *count);
+  EXPORT_SOLVER int EN_getcount(EN_Project ph, EN_CountType object, int *count);
 
   /**
   @brief Saves a project's data to an EPANET-formatted text file.
@@ -191,7 +199,7 @@ These functions are used to manage a project.
   @param filename the name of the file to create.
   @return Error code
   */
-  int DLLEXPORT EN_saveinpfile(EN_Project ph, const char *filename);
+  EXPORT_SOLVER int EN_saveinpfile(EN_Project ph, const char *filename);
 
   /**
   @brief Closes a project and frees all of its memory.
@@ -202,7 +210,7 @@ These functions are used to manage a project.
   project, so it can be re-used with another set of network data. Use ::EN_deleteproject
   to actually delete a project from memory.
   */
-  int DLLEXPORT EN_close(EN_Project ph);
+  EXPORT_SOLVER int EN_close(EN_Project ph);
 
   /**
   @}
@@ -248,7 +256,7 @@ These functions are used to manage a project.
   EN_deleteproject(ph);
   \endcode
   */
-  int DLLEXPORT EN_solveH(EN_Project ph);
+  EXPORT_SOLVER int EN_solveH(EN_Project ph);
 
   /**
   @brief Uses a previously saved binary hydraulics file to supply a project's hydraulics.
@@ -262,7 +270,7 @@ These functions are used to manage a project.
 
   Do not call this function while the hydraulics solver is open.
   */
-  int DLLEXPORT EN_usehydfile(EN_Project ph, const char *filename);
+  EXPORT_SOLVER int EN_usehydfile(EN_Project ph, const char *filename);
 
   /**
   @brief Opens a project's hydraulic solver.
@@ -277,7 +285,7 @@ These functions are used to manage a project.
   analysis or if hydraulics are being supplied by a previously saved hydraulics file
   using ::EN_usehydfile.
   */
-  int DLLEXPORT EN_openH(EN_Project ph);
+  EXPORT_SOLVER int EN_openH(EN_Project ph);
 
   /**
   @brief Initializes a network prior to running a hydraulic analysis.
@@ -305,7 +313,7 @@ These functions are used to manage a project.
   process hydraulic results as they are generated using the functions ::EN_getnodevalue
   and ::EN_getlinkvalue.
   */
-  int DLLEXPORT EN_initH(EN_Project ph, EN_SaveInitOptions initFlag);
+  EXPORT_SOLVER int EN_initH(EN_Project ph, EN_SaveInitOptions initFlag);
 
   /**
   @brief Computes a hydraulic solution for the current point in time.
@@ -321,7 +329,7 @@ These functions are used to manage a project.
 
   See ::EN_nextH for an example of using this function.
   */
-  int DLLEXPORT EN_runH(EN_Project ph, long *currentTime);
+  EXPORT_SOLVER int EN_runH(EN_Project ph, long *currentTime);
 
   /**
   @brief Determines the length of time until the next hydraulic event occurs in an
@@ -355,7 +363,7 @@ These functions are used to manage a project.
   EN_closeH(ph);
   \endcode
   */
-  int DLLEXPORT EN_nextH(EN_Project ph, long *tStep);
+  EXPORT_SOLVER int EN_nextH(EN_Project ph, long *tStep);
 
   /**
   @brief Transfers a project's hydraulics results from its temporary hydraulics file
@@ -367,7 +375,7 @@ These functions are used to manage a project.
   intervals need to be transferred to a project's binary output file. Such would be the case
   when results are to be written in formatted fashion to the project's report file using ::EN_report.
   */
-  int DLLEXPORT EN_saveH(EN_Project ph);
+  EXPORT_SOLVER int EN_saveH(EN_Project ph);
 
   /**
   @brief Saves a project's temporary hydraulics file to disk.
@@ -385,7 +393,7 @@ These functions are used to manage a project.
   called ::EN_solveH or the ::EN_initH - ::EN_runH - ::EN_nextH sequence with the initflag
   argument of ::EN_initH set to \b EN_SAVE or \b EN_SAVE_AND_INIT.
   */
-  int DLLEXPORT EN_savehydfile(EN_Project ph, const char *filename);
+  EXPORT_SOLVER int EN_savehydfile(EN_Project ph, const char *filename);
 
   /**
   @brief Closes the hydraulic solver freeing all of its allocated memory.
@@ -394,7 +402,7 @@ These functions are used to manage a project.
   Call ::EN_closeH after all hydraulics analyses have been made using
   ::EN_initH - ::EN_runH - ::EN_nextH. Do not call this function if ::EN_solveH is being used.
   */
-  int DLLEXPORT EN_closeH(EN_Project ph);
+  EXPORT_SOLVER int EN_closeH(EN_Project ph);
 
   /**
   @}
@@ -431,7 +439,7 @@ These functions are used to manage a project.
 
    <b>Example:</b> see ::EN_solveH.
   */
-  int DLLEXPORT EN_solveQ(EN_Project ph);
+  EXPORT_SOLVER int EN_solveQ(EN_Project ph);
 
   /**
   @brief Opens a project's water quality solver.
@@ -446,7 +454,7 @@ These functions are used to manage a project.
   Do not call this function if a complete water quality analysis will be made
   using ::EN_solveQ.
   */
-  int DLLEXPORT EN_openQ(EN_Project ph);
+  EXPORT_SOLVER int EN_openQ(EN_Project ph);
 
   /**
   @brief Initializes a network prior to running a water quality analysis.
@@ -462,7 +470,7 @@ These functions are used to manage a project.
 
   Do not call ::EN_initQ if a complete water quality analysis will be made using ::EN_solveQ.
   */
-  int DLLEXPORT EN_initQ(EN_Project ph, EN_SaveInitOptions saveFlag);
+  EXPORT_SOLVER int EN_initQ(EN_Project ph, EN_SaveInitOptions saveFlag);
 
   /**
   @brief Makes hydraulic and water quality results at the start of the current time
@@ -483,7 +491,7 @@ These functions are used to manage a project.
   hydraulic analysis that preceded the water quality analysis. Treat it as a read-only
   variable.
   */
-  int DLLEXPORT EN_runQ(EN_Project ph, long *currentTime);
+  EXPORT_SOLVER int EN_runQ(EN_Project ph, long *currentTime);
 
   /**
   @brief Advances a water quality simulation over the time until the next hydraulic event.
@@ -515,7 +523,7 @@ These functions are used to manage a project.
   EN_closeQ(ph);
   \endcode
   */
-  int DLLEXPORT EN_nextQ(EN_Project ph, long *tStep);
+  EXPORT_SOLVER int EN_nextQ(EN_Project ph, long *tStep);
 
   /**
   @brief Advances a water quality simulation by a single water quality time step.
@@ -531,7 +539,7 @@ These functions are used to manage a project.
   Use the argument \b timeLeft to determine when no more calls to ::EN_runQ are needed
   because the end of the simulation period has been reached (i.e., when \b timeLeft = 0).
   */
-  int DLLEXPORT EN_stepQ(EN_Project ph, long *timeLeft);
+  EXPORT_SOLVER int EN_stepQ(EN_Project ph, long *timeLeft);
 
   /**
   @brief Closes the water quality solver, freeing all of its allocated memory.
@@ -543,7 +551,7 @@ These functions are used to manage a project.
 
   Do not call this function if ::EN_solveQ is being used.
   */
-  int DLLEXPORT EN_closeQ(EN_Project ph);
+  EXPORT_SOLVER int EN_closeQ(EN_Project ph);
 
   /**
   @}
@@ -569,7 +577,7 @@ These functions are used to manage a project.
   @param line a text string to write.
   @return an error code.
   */
-  int  DLLEXPORT EN_writeline(EN_Project ph, char *line);
+  EXPORT_SOLVER int EN_writeline(EN_Project ph, char *line);
 
   /**
   @brief Writes simulation results in a tabular format to a project's report file.
@@ -583,7 +591,7 @@ These functions are used to manage a project.
 
   The format of the report is controlled by commands issued with ::EN_setreport.
   */
-  int  DLLEXPORT EN_report(EN_Project ph);
+  EXPORT_SOLVER int EN_report(EN_Project ph);
 
   /**
   @brief Copies the current contents of a project's report file to another file.
@@ -594,14 +602,14 @@ These functions are used to manage a project.
   This function allows toolkit clients to retrieve the contents of a project's
   report file while the project is still open.
   */
-  int  DLLEXPORT EN_copyreport(EN_Project ph, char *filename);
+  EXPORT_SOLVER int EN_copyreport(EN_Project ph, char *filename);
 
   /**
   @brief Clears the contents of a project's report file.
   @param ph an EPANET project handle.
   @return an error code.
   */
-  int DLLEXPORT EN_clearreport(EN_Project ph);
+  EXPORT_SOLVER int EN_clearreport(EN_Project ph);
 
   /**
   @brief Resets a project's report options to their default values.
@@ -618,7 +626,7 @@ These functions are used to manage a project.
   - node variables reported are elevation, head, pressure, and quality
   - link variables reported are flow, velocity, and head loss.
   */
-  int  DLLEXPORT EN_resetreport(EN_Project ph);
+  EXPORT_SOLVER int EN_resetreport(EN_Project ph);
 
   /**
   @brief Processes a reporting format command.
@@ -632,7 +640,7 @@ These functions are used to manage a project.
   Formatted results of a simulation can be written to a project's report file
   using the ::EN_report function.
   */
-  int  DLLEXPORT EN_setreport(EN_Project ph, char *format);
+  EXPORT_SOLVER int EN_setreport(EN_Project ph, char *format);
 
   /**
   @brief Sets the level of hydraulic status reporting.
@@ -652,7 +660,7 @@ These functions are used to manage a project.
   If many hydraulic analyses will be run in the application it is recommended that
   status reporting be turned off (<b>level = EN_NO_REPORT</b>).
   */
-  int  DLLEXPORT EN_setstatusreport(EN_Project ph, EN_StatusReport level);
+  EXPORT_SOLVER int EN_setstatusreport(EN_Project ph, EN_StatusReport level);
 
   /**
   @brief Retrieves the toolkit API version number.
@@ -662,7 +670,7 @@ These functions are used to manage a project.
   The version number is to be interpreted with implied decimals, i.e.,
   "20100" == "2(.)01(.)00"
   */
-  int  DLLEXPORT EN_getversion(int *version);
+  EXPORT_SOLVER int EN_getversion(int *version);
 
   /**
   @brief Returns the text of an error message generated by an error code.
@@ -673,7 +681,7 @@ These functions are used to manage a project.
 
   Error message strings should be at least @ref EN_SizeLimits "EN_MAXMSG" characters in length.
   */
-  int  DLLEXPORT EN_geterror(int errcode, char *out_errmsg, int maxLen);
+  EXPORT_SOLVER int EN_geterror(int errcode, char *out_errmsg, int maxLen);
 
   /**
   @brief Retrieves a particular simulation statistic.
@@ -682,7 +690,7 @@ These functions are used to manage a project.
   @param[out] value the value of the statistic.
   @return an error code
   */
-  int  DLLEXPORT EN_getstatistic(EN_Project ph, EN_AnalysisStatistic type , double* value);
+  EXPORT_SOLVER int EN_getstatistic(EN_Project ph, EN_AnalysisStatistic type , double* value);
 
   /**
   @brief Retrieves the order in which a node or link appears in an @ref OutFile "output file".
@@ -698,7 +706,7 @@ These functions are used to manage a project.
   after the order of nodes or links in a network's database has been changed due to editing
   operations.
   */
-  int  DLLEXPORT EN_getresultindex(EN_Project ph, EN_ObjectType type, int index, int *value);
+  EXPORT_SOLVER int EN_getresultindex(EN_Project ph, EN_ObjectType type, int index, int *value);
 
   /**
   @}
@@ -725,7 +733,7 @@ These functions are used to manage a project.
   @param[out] value the current value of the option.
   @return an error code
   */
-  int  DLLEXPORT EN_getoption(EN_Project ph, EN_Option option, double *value);
+  EXPORT_SOLVER int EN_getoption(EN_Project ph, EN_Option option, double *value);
 
   /**
   @brief Sets the value for an anlysis option.
@@ -735,7 +743,7 @@ These functions are used to manage a project.
   @return an error code.
   @see EN_Option
   */
-  int  DLLEXPORT EN_setoption(EN_Project ph, EN_Option option, double value);
+  EXPORT_SOLVER int EN_setoption(EN_Project ph, EN_Option option, double value);
 
   /**
   @brief Retrieves a project's flow units.
@@ -746,7 +754,7 @@ These functions are used to manage a project.
   Flow units in liters or cubic meters implies that SI metric units are used for all
   other quantities in addition to flow. Otherwise US Customary units are employed.
   */
-  int  DLLEXPORT EN_getflowunits(EN_Project ph, EN_FlowUnits *units);
+  EXPORT_SOLVER int EN_getflowunits(EN_Project ph, EN_FlowUnits *units);
 
   /**
   @brief Sets a project's flow units.
@@ -757,7 +765,7 @@ These functions are used to manage a project.
   Flow units in liters or cubic meters implies that SI metric units are used for all
   other quantities in addition to flow. Otherwise US Customary units are employed.
   */
-  int  DLLEXPORT EN_setflowunits(EN_Project ph, EN_FlowUnits units);
+  EXPORT_SOLVER int EN_setflowunits(EN_Project ph, EN_FlowUnits units);
 
   /**
   @brief Retrieves the value of a time parameter.
@@ -766,7 +774,7 @@ These functions are used to manage a project.
   @param[out] value the current value of the time parameter (in seconds).
   @return an error code.
   */
-  int  DLLEXPORT EN_gettimeparam(EN_Project ph, EN_TimeParameter param, long *value);
+  EXPORT_SOLVER int EN_gettimeparam(EN_Project ph, EN_TimeParameter param, long *value);
 
   /**
   @brief Sets the value of a time parameter.
@@ -775,7 +783,7 @@ These functions are used to manage a project.
   @param value the new value of the time parameter (in seconds)
   @return an error code.
   */
-  int  DLLEXPORT EN_settimeparam(EN_Project ph, EN_TimeParameter param, long value);
+  EXPORT_SOLVER int EN_settimeparam(EN_Project ph, EN_TimeParameter param, long value);
 
   /**
   @brief Gets information about the type of water quality analysis requested.
@@ -786,7 +794,7 @@ These functions are used to manage a project.
   @param[out] traceNode index of the node being traced (if applicable).
   @return an error code.
   */
-  int  DLLEXPORT EN_getqualinfo(EN_Project ph, EN_QualityType *qualType, char *out_chemName,
+  EXPORT_SOLVER int EN_getqualinfo(EN_Project ph, EN_QualityType *qualType, char *out_chemName,
                  char *out_chemUnits, int *traceNode);
 
   /**
@@ -796,7 +804,7 @@ These functions are used to manage a project.
   @param[out] traceNode the index of node being traced, if <b>qualType = EN_TRACE</b>.
   @return an error code.
   */
-  int  DLLEXPORT EN_getqualtype(EN_Project ph, EN_QualityType *qualType, int *traceNode);
+  EXPORT_SOLVER int EN_getqualtype(EN_Project ph, EN_QualityType *qualType, int *traceNode);
 
   /**
   @brief Sets the type of water quality analysis to run.
@@ -812,7 +820,7 @@ These functions are used to manage a project.
 
   Note that the trace node is specified by ID name and not by index.
   */
-  int  DLLEXPORT EN_setqualtype(EN_Project ph, EN_QualityType qualType, char *chemName,
+  EXPORT_SOLVER int EN_setqualtype(EN_Project ph, EN_QualityType qualType, char *chemName,
       char *chemUnits, char *traceNode);
 
   /**
@@ -843,7 +851,7 @@ These functions are used to manage a project.
 
   When a new node is created all of its properties (see @ref EN_NodeProperty) are set to 0.
   */
-  int DLLEXPORT EN_addnode(EN_Project ph, char *id, EN_NodeType nodeType, int *index);
+  EXPORT_SOLVER int EN_addnode(EN_Project ph, char *id, EN_NodeType nodeType, int *index);
 
   /**
   @brief Deletes a node from a project.
@@ -858,7 +866,7 @@ These functions are used to manage a project.
   in any controls and error code 261 is returned.
 
   */
-  int DLLEXPORT EN_deletenode(EN_Project ph, int index, EN_ActionCodeType actionCode);
+  EXPORT_SOLVER int EN_deletenode(EN_Project ph, int index, EN_ActionCodeType actionCode);
 
   /**
   @brief Gets the index of a node given its ID name.
@@ -867,7 +875,7 @@ These functions are used to manage a project.
   @param[out] index the node's index (starting from 1).
   @return an error code
   */
-  int  DLLEXPORT EN_getnodeindex(EN_Project ph, char *id, int *index);
+  EXPORT_SOLVER int EN_getnodeindex(EN_Project ph, char *id, int *index);
 
   /**
   @brief Gets the ID name of a node given its index.
@@ -878,7 +886,7 @@ These functions are used to manage a project.
 
   The ID name must be sized to hold at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getnodeid(EN_Project ph, int index, char *out_id);
+  EXPORT_SOLVER int EN_getnodeid(EN_Project ph, int index, char *out_id);
 
   /**
   @brief Changes the ID name of a node.
@@ -889,7 +897,7 @@ These functions are used to manage a project.
 
   The ID name must not be longer than @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int DLLEXPORT EN_setnodeid(EN_Project ph, int index, char *newid);
+  EXPORT_SOLVER int EN_setnodeid(EN_Project ph, int index, char *newid);
 
   /**
   @brief Retrieves a node's type given its index.
@@ -898,7 +906,7 @@ These functions are used to manage a project.
   @param[out] nodeType the node's type (see @ref EN_NodeType).
   @return an error code.
   */
-  int  DLLEXPORT EN_getnodetype(EN_Project ph, int index, EN_NodeType *nodeType);
+  EXPORT_SOLVER int EN_getnodetype(EN_Project ph, int index, EN_NodeType *nodeType);
 
   /**
   @brief Retrieves a property value for a node.
@@ -911,7 +919,7 @@ These functions are used to manage a project.
   Values are returned in units that depend on the units used for flow rate
   (see @ref Units).
   */
-  int  DLLEXPORT EN_getnodevalue(EN_Project ph, int index, EN_NodeProperty property, double *value);
+  EXPORT_SOLVER int EN_getnodevalue(EN_Project ph, int index, EN_NodeProperty property, double *value);
 
   /**
   @brief Sets a property value for a node.
@@ -923,7 +931,7 @@ These functions are used to manage a project.
 
   Values are in units that depend on the units used for flow rate (see @ref Units).
   */
-  int  DLLEXPORT EN_setnodevalue(EN_Project ph, int index, EN_NodeProperty property, double value);
+  EXPORT_SOLVER int EN_setnodevalue(EN_Project ph, int index, EN_NodeProperty property, double value);
 
   /**
   @brief Sets a group of properties for a junction node.
@@ -936,7 +944,7 @@ These functions are used to manage a project.
 
   These properties have units that depend on the units used for flow rate (see @ref Units).
   */
-  int  DLLEXPORT EN_setjuncdata(EN_Project ph, int index, double elev, double dmnd,
+  EXPORT_SOLVER int EN_setjuncdata(EN_Project ph, int index, double elev, double dmnd,
       char *dmndpat);
 
   /**
@@ -954,7 +962,7 @@ These functions are used to manage a project.
 
   These properties have units that depend on the units used for flow rate (see @ref Units).
   */
-  int  DLLEXPORT EN_settankdata(EN_Project ph, int index, double elev, double initlvl,
+  EXPORT_SOLVER int EN_settankdata(EN_Project ph, int index, double elev, double initlvl,
                  double minlvl, double maxlvl, double diam, double minvol, char *volcurve);
 
   /**
@@ -965,7 +973,7 @@ These functions are used to manage a project.
   @param[out] y the node's Y-coordinate value.
   @return an error code.
   */
-  int  DLLEXPORT EN_getcoord(EN_Project ph, int index, double *x, double *y);
+  EXPORT_SOLVER int EN_getcoord(EN_Project ph, int index, double *x, double *y);
 
   /**
   @brief Sets the (x,y) coordinates of a node.
@@ -975,7 +983,7 @@ These functions are used to manage a project.
   @param y the node's Y-coordinate value.
   @return an error code.
   */
-  int  DLLEXPORT EN_setcoord(EN_Project ph, int index, double x, double y);
+  EXPORT_SOLVER int EN_setcoord(EN_Project ph, int index, double x, double y);
 
   /**
   @}
@@ -1006,7 +1014,7 @@ These functions are used to manage a project.
 
   Parameters <b>pmin, preq,</b> and \b pexp are only used when the demand model is \b EN_PDA.
   */
-  int DLLEXPORT EN_getdemandmodel(EN_Project ph, EN_DemandModel *type, double *pmin,
+  EXPORT_SOLVER int EN_getdemandmodel(EN_Project ph, EN_DemandModel *type, double *pmin,
                 double *preq, double *pexp);
 
   /**
@@ -1028,7 +1036,7 @@ These functions are used to manage a project.
   demand reductions needed to insure that no node delivers positive demand at a pressure
   below \b pmin.
   */
-  int DLLEXPORT EN_setdemandmodel(EN_Project ph, EN_DemandModel type, double pmin,
+  EXPORT_SOLVER int EN_setdemandmodel(EN_Project ph, EN_DemandModel type, double pmin,
                 double preq, double pexp);
 
 
@@ -1044,7 +1052,7 @@ These functions are used to manage a project.
   A NULL or blank string can be used for `demandPattern` and for `demandName` to indicate
   that no time pattern or category name is associated with the demand.
   */
-  int DLLEXPORT EN_adddemand(EN_Project ph, int nodeIndex, double baseDemand,
+  EXPORT_SOLVER int EN_adddemand(EN_Project ph, int nodeIndex, double baseDemand,
                 const char *demandPattern, const char *demandName);
 
   /**
@@ -1054,7 +1062,7 @@ These functions are used to manage a project.
   @param demandIndex the position of the demand in the node's demands list (starting from 1).
   @return an error code.
   */
-  int DLLEXPORT EN_deletedemand(EN_Project ph, int nodeIndex, int demandIndex);
+  EXPORT_SOLVER int EN_deletedemand(EN_Project ph, int nodeIndex, int demandIndex);
 
   /**
   @brief Retrieves the index of a node's named demand category
@@ -1064,7 +1072,7 @@ These functions are used to manage a project.
   @param[out] demandIndex the index of the demand being sought
   @return an error code
   */
-  int DLLEXPORT EN_getdemandindex(EN_Project ph, int nodeIndex, const char *demandName,
+  EXPORT_SOLVER int EN_getdemandindex(EN_Project ph, int nodeIndex, const char *demandName,
                 int *demandIndex);
 
   /**
@@ -1074,7 +1082,7 @@ These functions are used to manage a project.
   @param[out] numDemands the number of demand categories assigned to the node.
   @return an error code.
   */
-  int  DLLEXPORT EN_getnumdemands(EN_Project ph, int nodeIndex, int *numDemands);
+  EXPORT_SOLVER int EN_getnumdemands(EN_Project ph, int nodeIndex, int *numDemands);
 
   /**
   @brief Gets the base demand for one of a node's demand categories.
@@ -1084,7 +1092,7 @@ These functions are used to manage a project.
   @param[out] baseDemand the category's base demand.
   @return an error code.
   */
-  int  DLLEXPORT EN_getbasedemand(EN_Project ph, int nodeIndex, int demandIndex,
+  EXPORT_SOLVER int EN_getbasedemand(EN_Project ph, int nodeIndex, int demandIndex,
                  double *baseDemand);
 
   /**
@@ -1095,7 +1103,7 @@ These functions are used to manage a project.
   @param baseDemand the new base demand for the category.
   @return an error code.
   */
-  int  DLLEXPORT EN_setbasedemand(EN_Project ph, int nodeIndex, int demandIndex,
+  EXPORT_SOLVER int EN_setbasedemand(EN_Project ph, int nodeIndex, int demandIndex,
                  double baseDemand);
 
   /**
@@ -1109,7 +1117,7 @@ These functions are used to manage a project.
   A returned pattern index of 0 indicates that no time pattern has been assigned to the
   demand category.
   */
-  int  DLLEXPORT EN_getdemandpattern(EN_Project ph, int nodeIndex, int demandIndex,
+  EXPORT_SOLVER int EN_getdemandpattern(EN_Project ph, int nodeIndex, int demandIndex,
        int *patIndex);
 
   /**
@@ -1123,7 +1131,7 @@ These functions are used to manage a project.
   Specifying a pattern index of 0 indicates that no time pattern is assigned to the
   demand category.
   */
-  int  DLLEXPORT EN_setdemandpattern(EN_Project ph, int nodeIndex, int demandIndex, int patIndex);
+  EXPORT_SOLVER int EN_setdemandpattern(EN_Project ph, int nodeIndex, int demandIndex, int patIndex);
 
   /**
   @brief Retrieves the name of a node's demand category.
@@ -1135,7 +1143,7 @@ These functions are used to manage a project.
 
   \b demandName must be sized to contain at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int DLLEXPORT EN_getdemandname(EN_Project ph, int nodeIndex, int demandIndex, char *out_demandName);
+  EXPORT_SOLVER int EN_getdemandname(EN_Project ph, int nodeIndex, int demandIndex, char *out_demandName);
 
   /**
   @brief Assigns a name to a node's demand category.
@@ -1147,7 +1155,7 @@ These functions are used to manage a project.
 
   The category name must contain no more than @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int DLLEXPORT EN_setdemandname(EN_Project ph, int nodeIndex, int demandIdx, const char *demandName);
+  EXPORT_SOLVER int EN_setdemandname(EN_Project ph, int nodeIndex, int demandIdx, const char *demandName);
 
   /**
   @}
@@ -1192,7 +1200,7 @@ These functions are used to manage a project.
 
   See @ref EN_LinkProperty.
   */
-  int DLLEXPORT EN_addlink(EN_Project ph, char *id, EN_LinkType linkType, char *fromNode,
+  EXPORT_SOLVER int EN_addlink(EN_Project ph, char *id, EN_LinkType linkType, char *fromNode,
                           char *toNode, int *index);
 
   /**
@@ -1206,7 +1214,7 @@ These functions are used to manage a project.
   controls that contain it are deleted. If set to \b EN_CONDITIONAL then the link
   is not deleted if it appears in any control and error 261 is returned.
   */
-  int DLLEXPORT EN_deletelink(EN_Project ph, int index, EN_ActionCodeType actionCode);
+  EXPORT_SOLVER int EN_deletelink(EN_Project ph, int index, EN_ActionCodeType actionCode);
 
   /**
   @brief Gets the index of a link given its ID name.
@@ -1215,7 +1223,7 @@ These functions are used to manage a project.
   @param[out] index the link's index (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_getlinkindex(EN_Project ph, char *id, int *index);
+  EXPORT_SOLVER int EN_getlinkindex(EN_Project ph, char *id, int *index);
 
   /**
   @brief Gets the ID name of a link given its index.
@@ -1226,7 +1234,7 @@ These functions are used to manage a project.
 
   The ID name must be sized to hold at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getlinkid(EN_Project ph, int index, char *out_id);
+  EXPORT_SOLVER int EN_getlinkid(EN_Project ph, int index, char *out_id);
 
   /**
   @brief Changes the ID name of a link.
@@ -1237,7 +1245,7 @@ These functions are used to manage a project.
 
   The ID name must not be longer than @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int DLLEXPORT EN_setlinkid(EN_Project ph, int index, char *newid);
+  EXPORT_SOLVER int EN_setlinkid(EN_Project ph, int index, char *newid);
 
   /**
   @brief Retrieves a link's type.
@@ -1246,7 +1254,7 @@ These functions are used to manage a project.
   @param[out] type the link's type (see @ref EN_LinkType).
   @return an error code.
   */
-  int  DLLEXPORT EN_getlinktype(EN_Project ph, int index, EN_LinkType *type);
+  EXPORT_SOLVER int EN_getlinktype(EN_Project ph, int index, EN_LinkType *type);
 
   /**
   @brief Changes a link's type.
@@ -1261,7 +1269,7 @@ These functions are used to manage a project.
   \b EN_CONDITIONAL then the type change is cancelled if the link appears in any
   control and error 261 is returned.
   */
-  int  DLLEXPORT EN_setlinktype(EN_Project ph, int *inout_index, EN_LinkType linkType,
+  EXPORT_SOLVER int EN_setlinktype(EN_Project ph, int *inout_index, EN_LinkType linkType,
                  EN_ActionCodeType actionCode);
 
   /**
@@ -1272,7 +1280,7 @@ These functions are used to manage a project.
   @param[out] node2 the index of the link's end node (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_getlinknodes(EN_Project ph, int index, int *node1, int *node2);
+  EXPORT_SOLVER int EN_getlinknodes(EN_Project ph, int index, int *node1, int *node2);
 
   /**
   @brief Sets the indexes of a link's start- and end-nodes.
@@ -1282,7 +1290,7 @@ These functions are used to manage a project.
   @param node2 The index of the link's end node (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_setlinknodes(EN_Project ph, int index, int node1, int node2);
+  EXPORT_SOLVER int EN_setlinknodes(EN_Project ph, int index, int node1, int node2);
 
   /**
   @brief Retrieves a property value for a link.
@@ -1294,7 +1302,7 @@ These functions are used to manage a project.
 
   Values are returned in units that depend on the units used for flow rate (see @ref Units).
   */
-  int  DLLEXPORT EN_getlinkvalue(EN_Project ph, int index, EN_LinkProperty property, double *value);
+  EXPORT_SOLVER int EN_getlinkvalue(EN_Project ph, int index, EN_LinkProperty property, double *value);
 
   /**
   @brief Sets a property value for a link.
@@ -1306,7 +1314,7 @@ These functions are used to manage a project.
 
   Values are in units that depend on the units used for flow rate (see @ref Units).
   */
-  int  DLLEXPORT EN_setlinkvalue(EN_Project ph, int index, EN_LinkProperty in_enum, double value);
+  EXPORT_SOLVER int EN_setlinkvalue(EN_Project ph, int index, EN_LinkProperty in_enum, double value);
 
   /**
   @brief Sets a group of properties for a pipe link.
@@ -1320,7 +1328,7 @@ These functions are used to manage a project.
 
   These properties have units that depend on the units used for flow rate (see @ref Units).
   */
-  int DLLEXPORT EN_setpipedata(EN_Project ph, int index, double length,
+  EXPORT_SOLVER int EN_setpipedata(EN_Project ph, int index, double length,
       double diam, double rough,  double mloss);
 
   /**
@@ -1330,7 +1338,7 @@ These functions are used to manage a project.
   @param[out] count the number of vertex points that describe the link's shape.
   @return an error code.
   */
-  int DLLEXPORT EN_getvertexcount(EN_Project ph, int index, int *count);
+  EXPORT_SOLVER int EN_getvertexcount(EN_Project ph, int index, int *count);
 
   /**
   @brief Retrieves the coordinate's of a vertex point assigned to a link.
@@ -1341,7 +1349,7 @@ These functions are used to manage a project.
   @param[out] y the vertex's Y-coordinate value.
   @return an error code.
   */
-  int DLLEXPORT EN_getvertex(EN_Project ph, int index, int vertex, double *x, double *y);
+  EXPORT_SOLVER int EN_getvertex(EN_Project ph, int index, int vertex, double *x, double *y);
 
   /**
   @brief Assigns a set of internal vertex points to a link.
@@ -1354,7 +1362,7 @@ These functions are used to manage a project.
 
   Replaces any existing vertices previously assigned to the link.
   */
-  int DLLEXPORT EN_setvertices(EN_Project ph, int index, double *x, double *y, int count);
+  EXPORT_SOLVER int EN_setvertices(EN_Project ph, int index, double *x, double *y, int count);
 
   /********************************************************************
 
@@ -1369,7 +1377,7 @@ These functions are used to manage a project.
   @param[out] type the type of head curve used by the pump (see @ref EN_PumpType).
   @return an error code.
   */
-  int  DLLEXPORT EN_getpumptype(EN_Project ph, int linkIndex, EN_PumpType *type);
+  EXPORT_SOLVER int EN_getpumptype(EN_Project ph, int linkIndex, EN_PumpType *type);
 
   /**
   @brief Retrieves the curve assigned to a pump's head curve.
@@ -1378,7 +1386,7 @@ These functions are used to manage a project.
   @param[out] curveIndex the index of the curve assigned to the pump's head curve.
   @return an error code.
   */
-  int  DLLEXPORT EN_getheadcurveindex(EN_Project ph, int linkIndex, int *curveIndex);
+  EXPORT_SOLVER int EN_getheadcurveindex(EN_Project ph, int linkIndex, int *curveIndex);
 
   /**
   @brief Assigns a curve to a pump's head curve.
@@ -1387,7 +1395,7 @@ These functions are used to manage a project.
   @param curveIndex the index of a curve to be assigned as the pump's head curve.
   @return an error code.
   */
-  int  DLLEXPORT EN_setheadcurveindex(EN_Project ph, int linkIndex, int curveIndex);
+  EXPORT_SOLVER int EN_setheadcurveindex(EN_Project ph, int linkIndex, int curveIndex);
 
   /**
   @}
@@ -1415,7 +1423,7 @@ These functions are used to manage a project.
 
   The new pattern contains a single time period whose factor is 1.0.
   */
-  int  DLLEXPORT EN_addpattern(EN_Project ph, char *id);
+  EXPORT_SOLVER int EN_addpattern(EN_Project ph, char *id);
 
   /**
   @brief Deletes a time pattern from a project.
@@ -1423,7 +1431,7 @@ These functions are used to manage a project.
   @param index the time pattern's index (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_deletepattern(EN_Project ph, int index);
+  EXPORT_SOLVER int EN_deletepattern(EN_Project ph, int index);
 
   /**
   @brief Retrieves the index of a time pattern given its ID name.
@@ -1432,7 +1440,7 @@ These functions are used to manage a project.
   @param[out] index the time pattern's index (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_getpatternindex(EN_Project ph, const char *id, int *index);
+  EXPORT_SOLVER int EN_getpatternindex(EN_Project ph, const char *id, int *index);
 
   /**
   @brief Retrieves the ID name of a time pattern given its index.
@@ -1443,7 +1451,7 @@ These functions are used to manage a project.
 
   The ID name must be sized to hold at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getpatternid(EN_Project ph, int index, char *out_id);
+  EXPORT_SOLVER int EN_getpatternid(EN_Project ph, int index, char *out_id);
 
   /**
   @brief Changes the ID name of a time pattern given its index.
@@ -1454,7 +1462,7 @@ These functions are used to manage a project.
 
   The new ID name must not exceed @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_setpatternid(EN_Project ph, int index, char *id);
+  EXPORT_SOLVER int EN_setpatternid(EN_Project ph, int index, char *id);
 
   /**
   @brief Retrieves the number of time periods in a time pattern.
@@ -1463,7 +1471,7 @@ These functions are used to manage a project.
   @param[out] len the number of time periods in the pattern.
   @return an error code.
   */
-  int  DLLEXPORT EN_getpatternlen(EN_Project ph, int index, int *len);
+  EXPORT_SOLVER int EN_getpatternlen(EN_Project ph, int index, int *len);
 
   /**
   @brief Retrieves a time pattern's factor for a given time period.
@@ -1473,7 +1481,7 @@ These functions are used to manage a project.
   @param[out] value the pattern factor for the given time period.
   @return an error code.
   */
-  int  DLLEXPORT EN_getpatternvalue(EN_Project ph, int index, int period, double *value);
+  EXPORT_SOLVER int EN_getpatternvalue(EN_Project ph, int index, int period, double *value);
 
   /**
   @brief Sets a time pattern's factor for a given time period.
@@ -1483,7 +1491,7 @@ These functions are used to manage a project.
   @param value the new value of the pattern factor for the given time period.
   @return an error code.
   */
-  int  DLLEXPORT EN_setpatternvalue(EN_Project ph, int index, int period, double value);
+  EXPORT_SOLVER int EN_setpatternvalue(EN_Project ph, int index, int period, double value);
 
   /**
   @brief Retrieves the average of all pattern factors in a time pattern.
@@ -1492,7 +1500,7 @@ These functions are used to manage a project.
   @param[out] value The average of all of the time pattern's factors.
   @return an error code.
   */
-  int  DLLEXPORT EN_getaveragepatternvalue(EN_Project ph, int index, double *value);
+  EXPORT_SOLVER int EN_getaveragepatternvalue(EN_Project ph, int index, double *value);
 
   /**
   @brief Sets the pattern factors for a given time pattern.
@@ -1507,7 +1515,7 @@ These functions are used to manage a project.
   Use this function to redefine (and resize) a time pattern all at once;
   use @ref EN_setpatternvalue to revise pattern factors one at a time.
   */
-  int  DLLEXPORT EN_setpattern(EN_Project ph, int index, double *values, int len);
+  EXPORT_SOLVER int EN_setpattern(EN_Project ph, int index, double *values, int len);
 
   /**
   @}
@@ -1535,7 +1543,7 @@ These functions are used to manage a project.
 
   The new curve contains a single data point (1.0, 1.0).
   */
-  int  DLLEXPORT EN_addcurve(EN_Project ph, char *id);
+  EXPORT_SOLVER int EN_addcurve(EN_Project ph, char *id);
 
   /**
   @brief Deletes a data curve from a project.
@@ -1543,7 +1551,7 @@ These functions are used to manage a project.
   @param index the data curve's index (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_deletecurve(EN_Project ph, int index);
+  EXPORT_SOLVER int EN_deletecurve(EN_Project ph, int index);
 
   /**
   @brief Retrieves the index of a curve given its ID name.
@@ -1552,7 +1560,7 @@ These functions are used to manage a project.
   @param[out] index The curve's index (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_getcurveindex(EN_Project ph, char *id, int *index);
+  EXPORT_SOLVER int EN_getcurveindex(EN_Project ph, char *id, int *index);
 
   /**
   @brief Retrieves the ID name of a curve given its index.
@@ -1563,7 +1571,7 @@ These functions are used to manage a project.
 
   The ID name must be sized to hold at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getcurveid(EN_Project ph, int index, char *out_id);
+  EXPORT_SOLVER int EN_getcurveid(EN_Project ph, int index, char *out_id);
 
   /**
   @brief Changes the ID name of a data curve given its index.
@@ -1574,7 +1582,7 @@ These functions are used to manage a project.
 
   The new ID name must not exceed @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_setcurveid(EN_Project ph, int index, char *id);
+  EXPORT_SOLVER int EN_setcurveid(EN_Project ph, int index, char *id);
 
   /**
   @brief Retrieves the number of points in a curve.
@@ -1583,7 +1591,7 @@ These functions are used to manage a project.
   @param[out] len The number of data points assigned to the curve.
   @return an error code.
   */
-  int  DLLEXPORT EN_getcurvelen(EN_Project ph, int index, int *len);
+  EXPORT_SOLVER int EN_getcurvelen(EN_Project ph, int index, int *len);
 
   /**
   @brief Retrieves a curve's type.
@@ -1592,7 +1600,7 @@ These functions are used to manage a project.
   @param[out] type the curve's type (see @ref EN_CurveType).
   @return an error code.
   */
-  int  DLLEXPORT EN_getcurvetype(EN_Project ph, int index, EN_CurveType *type);
+  EXPORT_SOLVER int EN_getcurvetype(EN_Project ph, int index, EN_CurveType *type);
 
   /**
   @brief Retrieves the value of a single data point for a curve.
@@ -1603,7 +1611,7 @@ These functions are used to manage a project.
   @param[out] y the point's y-value.
   @return an error code.
   */
-  int  DLLEXPORT EN_getcurvevalue(EN_Project ph, int curveIndex, int pointIndex,
+  EXPORT_SOLVER int EN_getcurvevalue(EN_Project ph, int curveIndex, int pointIndex,
                  double *x, double *y);
 
   /**
@@ -1615,7 +1623,7 @@ These functions are used to manage a project.
   @param y the point's new y-value.
   @return an error code.
   */
-  int  DLLEXPORT EN_setcurvevalue(EN_Project ph, int curveIndex, int pointIndex,
+  EXPORT_SOLVER int EN_setcurvevalue(EN_Project ph, int curveIndex, int pointIndex,
                  double x, double y);
 
   /**
@@ -1632,7 +1640,7 @@ These functions are used to manage a project.
   to hold `nPoints` number of data points and for sizing `id` to hold at least
   @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getcurve(EN_Project ph, int index, char* out_id, int *nPoints,
+  EXPORT_SOLVER int EN_getcurve(EN_Project ph, int index, char* out_id, int *nPoints,
                  double *xValues, double *yValues);
 
   /**
@@ -1649,7 +1657,7 @@ These functions are used to manage a project.
   Use this function to redefine (and resize) a curve all at once;
   use @ref EN_setcurvevalue to revise a curve's data points one at a time.
   */
-  int  DLLEXPORT EN_setcurve(EN_Project ph, int index, double *xValues,
+  EXPORT_SOLVER int EN_setcurve(EN_Project ph, int index, double *xValues,
       double *yValues, int nPoints);
 
   /**
@@ -1683,7 +1691,7 @@ These functions are used to manage a project.
   @param[out] index index of the new control.
   @return an error code.
   */
-  int  DLLEXPORT EN_addcontrol(EN_Project ph, EN_ControlType type, int linkIndex,
+  EXPORT_SOLVER int EN_addcontrol(EN_Project ph, EN_ControlType type, int linkIndex,
                  double setting, int nodeIndex, double level, int *index);
 
   /**
@@ -1692,7 +1700,7 @@ These functions are used to manage a project.
   @param index the index of the control to delete (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_deletecontrol(EN_Project ph, int index);
+  EXPORT_SOLVER int EN_deletecontrol(EN_Project ph, int index);
 
   /**
   @brief Retrieves the properties of a simple control.
@@ -1707,7 +1715,7 @@ These functions are used to manage a project.
   that triggers the control.
   @return an error code.
   */
-  int  DLLEXPORT EN_getcontrol(EN_Project ph, int index, EN_ControlType *type, int *linkIndex,
+  EXPORT_SOLVER int EN_getcontrol(EN_Project ph, int index, EN_ControlType *type, int *linkIndex,
                  double *setting, int *nodeIndex, double *level);
 
   /**
@@ -1723,7 +1731,7 @@ These functions are used to manage a project.
   that triggers the control.
   @return an error code.
   */
-  int  DLLEXPORT EN_setcontrol(EN_Project ph, int index, EN_ControlType type, int linkIndex,
+  EXPORT_SOLVER int EN_setcontrol(EN_Project ph, int index, EN_ControlType type, int linkIndex,
       double setting, int nodeIndex, double level);
 
   /**
@@ -1753,7 +1761,7 @@ These functions are used to manage a project.
   Consult the @ref RulesPage section of the @ref InpFile topic to learn about a
   rule's format. Each clause of the rule must end with a newline character <b>`\n`</b>.
   */
-  int DLLEXPORT EN_addrule(EN_Project ph, char *rule);
+  EXPORT_SOLVER int EN_addrule(EN_Project ph, char *rule);
 
   /**
   @brief Deletes an existing rule-based control.
@@ -1761,7 +1769,7 @@ These functions are used to manage a project.
   @param index the index of the rule to be deleted (starting from 1).
   @return an error code.
   */
-  int  DLLEXPORT EN_deleterule(EN_Project ph, int index);
+  EXPORT_SOLVER int EN_deleterule(EN_Project ph, int index);
 
   /**
   @brief Retrieves summary information about a rule-based control.
@@ -1773,7 +1781,7 @@ These functions are used to manage a project.
   @param[out] priority the rule's priority value.
   @return an error code.
   */
-  int  DLLEXPORT EN_getrule(EN_Project ph, int index, int *nPremises,
+  EXPORT_SOLVER int EN_getrule(EN_Project ph, int index, int *nPremises,
                  int *nThenActions, int *nElseActions, double *priority);
 
   /**
@@ -1785,7 +1793,7 @@ These functions are used to manage a project.
 
   The ID name must be sized to hold at least @ref EN_SizeLimits "EN_MAXID" characters.
   */
-  int  DLLEXPORT EN_getruleID(EN_Project ph, int index, char* out_id);
+  EXPORT_SOLVER int EN_getruleID(EN_Project ph, int index, char* out_id);
 
   /**
   @brief Gets the properties of a premise in a rule-based control.
@@ -1803,7 +1811,7 @@ These functions are used to manage a project.
   @param[out] value the value that the object's variable is compared to.
   @return an error code.
   */
-  int  DLLEXPORT EN_getpremise(EN_Project ph, int ruleIndex, int premiseIndex,
+  EXPORT_SOLVER int EN_getpremise(EN_Project ph, int ruleIndex, int premiseIndex,
                  int *logop, EN_RuleObject *object, int *objIndex, EN_RuleVariable *variable,
                  EN_RuleOperator *relop, EN_RuleStatus *status, double *value);
 
@@ -1822,7 +1830,7 @@ These functions are used to manage a project.
   @param value the value that the object's variable is compared to.
   @return an error code.
   */
-  int  DLLEXPORT EN_setpremise(EN_Project ph, int ruleIndex, int premiseIndex,
+  EXPORT_SOLVER int EN_setpremise(EN_Project ph, int ruleIndex, int premiseIndex,
                  int logop, EN_RuleObject object, int objIndex, EN_RuleVariable variable,
                  EN_RuleOperator relop, EN_RuleStatus status, double value);
 
@@ -1834,7 +1842,7 @@ These functions are used to manage a project.
   @param objIndex the index of the premise's object (e.g. the index of a tank).
   @return an error code.
   */
-  int  DLLEXPORT EN_setpremiseindex(EN_Project ph, int ruleIndex, int premiseIndex,
+  EXPORT_SOLVER int EN_setpremiseindex(EN_Project ph, int ruleIndex, int premiseIndex,
                  int objIndex);
 
   /**
@@ -1846,7 +1854,7 @@ These functions are used to manage a project.
   (see @ref EN_RuleStatus).
   @return an error code.
   */
-  int  DLLEXPORT EN_setpremisestatus(EN_Project ph, int ruleIndex, int premiseIndex,
+  EXPORT_SOLVER int EN_setpremisestatus(EN_Project ph, int ruleIndex, int premiseIndex,
                  EN_RuleStatus status);
 
   /**
@@ -1857,7 +1865,7 @@ These functions are used to manage a project.
   @param value The value that the premise's variable is compared to.
   @return an error code.
   */
-  int  DLLEXPORT EN_setpremisevalue(EN_Project ph, int ruleIndex, int premiseIndex,
+  EXPORT_SOLVER int EN_setpremisevalue(EN_Project ph, int ruleIndex, int premiseIndex,
                  double value);
 
   /**
@@ -1870,7 +1878,7 @@ These functions are used to manage a project.
   @param[out] setting the value assigned to the link's setting.
   @return an error code.
   */
-  int  DLLEXPORT EN_getthenaction(EN_Project ph, int ruleIndex, int actionIndex,
+  EXPORT_SOLVER int EN_getthenaction(EN_Project ph, int ruleIndex, int actionIndex,
                  int *linkIndex, EN_RuleStatus *status, double *setting);
 
   /**
@@ -1883,7 +1891,7 @@ These functions are used to manage a project.
   @param setting the new value assigned to the link's setting.
   @return an error code.
   */
-  int  DLLEXPORT EN_setthenaction(EN_Project ph, int ruleIndex, int actionIndex,
+  EXPORT_SOLVER int EN_setthenaction(EN_Project ph, int ruleIndex, int actionIndex,
                  int linkIndex, EN_RuleStatus status, double setting);
 
   /**
@@ -1896,7 +1904,7 @@ These functions are used to manage a project.
   @param[out] setting the value assigned to the link's setting.
   @return an error code.
   */
-  int  DLLEXPORT EN_getelseaction(EN_Project ph, int ruleIndex, int actionIndex,
+  EXPORT_SOLVER int EN_getelseaction(EN_Project ph, int ruleIndex, int actionIndex,
                  int *linkIndex, EN_RuleStatus *status, double *setting);
 
   /**
@@ -1909,7 +1917,7 @@ These functions are used to manage a project.
   @param setting the new value assigned to the link's setting.
   @return an error code.
   */
-  int  DLLEXPORT EN_setelseaction(EN_Project ph, int ruleIndex, int actionIndex,
+  EXPORT_SOLVER int EN_setelseaction(EN_Project ph, int ruleIndex, int actionIndex,
                  int linkIndex, EN_RuleStatus status, double setting);
 
   /**
@@ -1919,7 +1927,7 @@ These functions are used to manage a project.
   @param priority the priority value assigned to the rule.
   @return an error code.
   */
-  int  DLLEXPORT EN_setrulepriority(EN_Project ph, int index, double priority);
+  EXPORT_SOLVER int EN_setrulepriority(EN_Project ph, int index, double priority);
 
   /**
   @}
