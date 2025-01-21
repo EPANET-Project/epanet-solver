@@ -42,11 +42,12 @@ set_target_properties(epanet-output
 )
 
 include(GenerateExportHeader)
-generate_export_header(epanet-output
+generate_export_header(
+  epanet-output
     BASE_NAME
         epanet_output
     EXPORT_MACRO_NAME
-        EXPORT_OUT_API
+        EXPORT_OUTPUT
     EXPORT_FILE_NAME
         epanet_output_export.h
     STATIC_DEFINE

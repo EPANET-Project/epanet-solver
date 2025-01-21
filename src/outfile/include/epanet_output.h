@@ -55,7 +55,7 @@ extern "C" {
 all other Output API functions.
 @return an error code -- 0 on success or -1 on failure
 */
-int EXPORT_OUT_API ENR_createHandle(ENR_Handle *p_handle);
+EXPORT_OUTPUT int ENR_createHandle(ENR_Handle *p_handle);
 
 
 /**
@@ -63,7 +63,7 @@ int EXPORT_OUT_API ENR_createHandle(ENR_Handle *p_handle);
 @param[in] p_handle an EPANET output handle.
 @return an error code -- 0 on success or -1 on failure
 */
-int EXPORT_OUT_API ENR_deleteHandle(ENR_Handle p_handle);
+EXPORT_OUTPUT int ENR_deleteHandle(ENR_Handle p_handle);
 
 
 /**
@@ -72,7 +72,7 @@ int EXPORT_OUT_API ENR_deleteHandle(ENR_Handle p_handle);
 @param path the name of the binary output file to be opened.
 @return an error code
 */
-int EXPORT_OUT_API ENR_openFile(ENR_Handle p_handle, const char *path);
+EXPORT_OUTPUT int ENR_openFile(ENR_Handle p_handle, const char *path);
 
 
 /**
@@ -80,7 +80,7 @@ int EXPORT_OUT_API ENR_openFile(ENR_Handle p_handle, const char *path);
 @param p_handle an EPANET output handle
 @return an error code -- 0 on success or -1 on failure
 */
-int EXPORT_OUT_API ENR_closeFile(ENR_Handle p_handle);
+EXPORT_OUTPUT int ENR_closeFile(ENR_Handle p_handle);
 
 
 /**
@@ -89,7 +89,7 @@ int EXPORT_OUT_API ENR_closeFile(ENR_Handle p_handle);
 @param[out] version the EPANET version number found in the output file prologue.
 @return an error code
 */
-int EXPORT_OUT_API ENR_getVersion(ENR_Handle p_handle, int *version);
+EXPORT_OUTPUT int ENR_getVersion(ENR_Handle p_handle, int *version);
 
 
 /**
@@ -110,7 +110,7 @@ Element count array contents:
 This function allocates memory for the element count array. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getNetSize(ENR_Handle p_handle, int **int_out, int *int_dim);
+EXPORT_OUTPUT int ENR_getNetSize(ENR_Handle p_handle, int **int_out, int *int_dim);
 
 
 /**
@@ -121,7 +121,7 @@ int EXPORT_OUT_API ENR_getNetSize(ENR_Handle p_handle, int **int_out, int *int_d
 @ref ENR_PressUnits, @ref ENR_QualUnits)
 @return an error code
 */
-int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes unit_code, int *enum_out);
+EXPORT_OUTPUT int ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes unit_code, int *enum_out);
 
 
 /**
@@ -131,7 +131,7 @@ int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes unit_code, in
 @param[out] value the value of the time parameter.
 @return an error code
 */
-int EXPORT_OUT_API ENR_getTimes(ENR_Handle p_handle, ENR_Time time_code, int *time);
+EXPORT_OUTPUT int ENR_getTimes(ENR_Handle p_handle, ENR_Time time_code, int *time);
 
 
 /**
@@ -146,7 +146,7 @@ int EXPORT_OUT_API ENR_getTimes(ENR_Handle p_handle, ENR_Time time_code, int *ti
 This function allocates memory for the element name string. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getElementName(ENR_Handle p_handle, ENR_ElementType elem_type,
+EXPORT_OUTPUT int ENR_getElementName(ENR_Handle p_handle, ENR_ElementType elem_type,
 		int elem_index, char **string_out, int *slen);
 
 
@@ -171,7 +171,7 @@ Energy usage statistics:
 This function allocates memory for the energy usage array. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getEnergyUsage(ENR_Handle p_handle, int pumpIndex,
+EXPORT_OUTPUT int ENR_getEnergyUsage(ENR_Handle p_handle, int pumpIndex,
 		int *link_index, float **float_out, int *int_dim);
 
 
@@ -192,7 +192,7 @@ Average reaction rates and souce mass values:
 This function allocates memory for the network reaction array. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getNetReacts(ENR_Handle p_handle, float **float_out, int *int_dim);
+EXPORT_OUTPUT int ENR_getNetReacts(ENR_Handle p_handle, float **float_out, int *int_dim);
 
 
 /**
@@ -209,7 +209,7 @@ int EXPORT_OUT_API ENR_getNetReacts(ENR_Handle p_handle, float **float_out, int 
 This function allocates memory for the node attribute series. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getNodeSeries(ENR_Handle p_handle, int nodeIndex, ENR_NodeAttribute attr,
+EXPORT_OUTPUT int ENR_getNodeSeries(ENR_Handle p_handle, int nodeIndex, ENR_NodeAttribute attr,
     int startPeriod, int endPeriod, float **float_out, int *int_dim);
 
 
@@ -227,7 +227,7 @@ int EXPORT_OUT_API ENR_getNodeSeries(ENR_Handle p_handle, int nodeIndex, ENR_Nod
 This function allocates memory for the link attribute series. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getLinkSeries(ENR_Handle p_handle, int linkIndex, ENR_LinkAttribute attr,
+EXPORT_OUTPUT int ENR_getLinkSeries(ENR_Handle p_handle, int linkIndex, ENR_LinkAttribute attr,
     int startPeriod, int endPeriod, float **float_out, int *int_dim);
 
 
@@ -243,7 +243,7 @@ int EXPORT_OUT_API ENR_getLinkSeries(ENR_Handle p_handle, int linkIndex, ENR_Lin
 This function allocates memory for the node attribute array. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getNodeAttribute(ENR_Handle p_handle, int periodIndex,
+EXPORT_OUTPUT int ENR_getNodeAttribute(ENR_Handle p_handle, int periodIndex,
     ENR_NodeAttribute attr, float **float_out, int *int_dim);
 
 
@@ -259,7 +259,7 @@ int EXPORT_OUT_API ENR_getNodeAttribute(ENR_Handle p_handle, int periodIndex,
 This function allocates memory for the link attribute array. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getLinkAttribute(ENR_Handle p_handle, int periodIndex,
+EXPORT_OUTPUT int ENR_getLinkAttribute(ENR_Handle p_handle, int periodIndex,
     ENR_LinkAttribute attr, float **float_out, int *int_dim);
 
 
@@ -275,7 +275,7 @@ int EXPORT_OUT_API ENR_getLinkAttribute(ENR_Handle p_handle, int periodIndex,
 This function allocates memory for the node result array. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getNodeResult(ENR_Handle p_handle, int periodIndex,
+EXPORT_OUTPUT int ENR_getNodeResult(ENR_Handle p_handle, int periodIndex,
     int nodeIndex, float **float_out, int *int_dim);
 
 
@@ -291,7 +291,7 @@ int EXPORT_OUT_API ENR_getNodeResult(ENR_Handle p_handle, int periodIndex,
 This function allocates memory for the link result array. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
+EXPORT_OUTPUT int ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
     int linkIndex, float **float_out, int *int_dim);
 
 
@@ -299,7 +299,7 @@ int EXPORT_OUT_API ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
 @brief Free memory allocated by API call.
 @param memory the memory to be freed.
 */
-void EXPORT_OUT_API ENR_freeMemory(void *memory);
+EXPORT_OUTPUT void ENR_freeMemory(void *memory);
 
 
 /**
@@ -311,7 +311,7 @@ void EXPORT_OUT_API ENR_freeMemory(void *memory);
 This function allocates memory for the message buffer. The caller is
 responsible for freeing it using ::ENR_freeMemory.
 */
-int EXPORT_OUT_API ENR_getError(int err_code, char **err_msg);
+EXPORT_OUTPUT int ENR_getError(int err_code, char **err_msg);
 
 /**
 @}

@@ -82,7 +82,7 @@ int   *newIntArray(int n);
 char  *newCharArray(int n);
 
 
-int EXPORT_OUT_API ENR_createHandle(ENR_Handle *p_handle)
+int ENR_createHandle(ENR_Handle *p_handle)
 //  Purpose: Initialized pointer for the opaque ENR_Handle.
 //
 //  Returns: Error code 0 on success, -1 on failure
@@ -108,7 +108,7 @@ int EXPORT_OUT_API ENR_createHandle(ENR_Handle *p_handle)
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_deleteHandle(ENR_Handle p_handle)
+int ENR_deleteHandle(ENR_Handle p_handle)
 {
     int errorcode = 0;
 
@@ -125,7 +125,7 @@ int EXPORT_OUT_API ENR_deleteHandle(ENR_Handle p_handle)
 }
 
 
-int EXPORT_OUT_API ENR_openFile(ENR_Handle p_handle, const char *path)
+int ENR_openFile(ENR_Handle p_handle, const char *path)
 /*------------------------------------------------------------------------
  **   Input:   path
  **   Output:  p_handle = pointer to ENR_Handle struct
@@ -184,7 +184,7 @@ int EXPORT_OUT_API ENR_openFile(ENR_Handle p_handle, const char *path)
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_closeFile(ENR_Handle p_handle)
+int ENR_closeFile(ENR_Handle p_handle)
 /*------------------------------------------------------------------------
  **    Input:  p_handle = pointer to ENR_Handle struct
  **
@@ -210,7 +210,7 @@ int EXPORT_OUT_API ENR_closeFile(ENR_Handle p_handle)
 }
 
 
-int EXPORT_OUT_API ENR_getVersion(ENR_Handle p_handle, int *version)
+int ENR_getVersion(ENR_Handle p_handle, int *version)
 /*------------------------------------------------------------------------
  **    Input: p_handle = pointer to ENR_Handle struct
  **   Output: version  Epanet version
@@ -233,7 +233,7 @@ int EXPORT_OUT_API ENR_getVersion(ENR_Handle p_handle, int *version)
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getNetSize(ENR_Handle p_handle, int **elementCount, int *length)
+int ENR_getNetSize(ENR_Handle p_handle, int **elementCount, int *length)
 /*------------------------------------------------------------------------
  **    Input:   p_handle = pointer to ENR_Handle struct
  **   Output:  array of element counts (nodes, tanks, links, pumps, valves)
@@ -261,7 +261,7 @@ int EXPORT_OUT_API ENR_getNetSize(ENR_Handle p_handle, int **elementCount, int *
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes code, int *unitFlag)
+int ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes code, int *unitFlag)
 /*------------------------------------------------------------------------
  **   Input:   p_handle = pointer to ENR_Handle struct
  **            code
@@ -335,7 +335,7 @@ int EXPORT_OUT_API ENR_getUnits(ENR_Handle p_handle, ENR_UnitTypes code, int *un
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getTimes(ENR_Handle p_handle, ENR_Time code, int *time)
+int ENR_getTimes(ENR_Handle p_handle, ENR_Time code, int *time)
 /*------------------------------------------------------------------------
  **   Input:   p_handle = pointer to ENR_Handle struct
  **            code = element code
@@ -380,12 +380,12 @@ int EXPORT_OUT_API ENR_getTimes(ENR_Handle p_handle, ENR_Time code, int *time)
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getChemData(ENR_Handle p_handle, char **name, int *length)
+int ENR_getChemData(ENR_Handle p_handle, char **name, int *length)
 {
     return 0;
 }
 
-int EXPORT_OUT_API ENR_getElementName(ENR_Handle p_handle, ENR_ElementType type,
+int ENR_getElementName(ENR_Handle p_handle, ENR_ElementType type,
         int elementIndex, char **name, int *length)
 /*------------------------------------------------------------------------
  **   Input:   p_handle = pointer to ENR_Handle struct
@@ -442,7 +442,7 @@ int EXPORT_OUT_API ENR_getElementName(ENR_Handle p_handle, ENR_ElementType type,
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getEnergyUsage(ENR_Handle p_handle, int pumpIndex,
+int ENR_getEnergyUsage(ENR_Handle p_handle, int pumpIndex,
         int *linkIndex, float **outValues, int *length)
 /*
  * Purpose: Returns pump energy usage statistics.
@@ -484,7 +484,7 @@ int EXPORT_OUT_API ENR_getEnergyUsage(ENR_Handle p_handle, int pumpIndex,
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getNetReacts(ENR_Handle p_handle, float **outValues, int *length)
+int ENR_getNetReacts(ENR_Handle p_handle, float **outValues, int *length)
 /*
  *  Purpose: Returns network wide average reaction rates and average
  *  source mass inflow:
@@ -516,7 +516,7 @@ int EXPORT_OUT_API ENR_getNetReacts(ENR_Handle p_handle, float **outValues, int 
     return errorcode;
 }
 
-void EXPORT_OUT_API ENR_freeMemory(void *memory)
+void ENR_freeMemory(void *memory)
 //
 //  Purpose: Frees memory allocated by API calls
 //
@@ -524,7 +524,7 @@ void EXPORT_OUT_API ENR_freeMemory(void *memory)
     free(memory);
 }
 
-int EXPORT_OUT_API ENR_getNodeSeries(ENR_Handle p_handle, int nodeIndex, ENR_NodeAttribute attr,
+int ENR_getNodeSeries(ENR_Handle p_handle, int nodeIndex, ENR_NodeAttribute attr,
         int startPeriod, int endPeriod, float **outValueSeries, int *dim)
 //
 //  Purpose: Get time series results for particular attribute. Specify series
@@ -556,7 +556,7 @@ int EXPORT_OUT_API ENR_getNodeSeries(ENR_Handle p_handle, int nodeIndex, ENR_Nod
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getLinkSeries(ENR_Handle p_handle, int linkIndex, ENR_LinkAttribute attr,
+int ENR_getLinkSeries(ENR_Handle p_handle, int linkIndex, ENR_LinkAttribute attr,
         int startPeriod, int endPeriod, float **outValueSeries, int *dim)
 //
 //  Purpose: Get time series results for particular attribute. Specify series
@@ -588,7 +588,7 @@ int EXPORT_OUT_API ENR_getLinkSeries(ENR_Handle p_handle, int linkIndex, ENR_Lin
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getNodeAttribute(ENR_Handle p_handle, int periodIndex,
+int ENR_getNodeAttribute(ENR_Handle p_handle, int periodIndex,
         ENR_NodeAttribute attr, float **outValueArray, int *length)
 //
 //   Purpose:
@@ -634,7 +634,7 @@ int EXPORT_OUT_API ENR_getNodeAttribute(ENR_Handle p_handle, int periodIndex,
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getLinkAttribute(ENR_Handle p_handle, int periodIndex,
+int ENR_getLinkAttribute(ENR_Handle p_handle, int periodIndex,
         ENR_LinkAttribute attr, float **outValueArray, int *length)
 //
 //   Purpose:
@@ -681,7 +681,7 @@ int EXPORT_OUT_API ENR_getLinkAttribute(ENR_Handle p_handle, int periodIndex,
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getNodeResult(ENR_Handle p_handle, int periodIndex,
+int ENR_getNodeResult(ENR_Handle p_handle, int periodIndex,
         int nodeIndex, float **outValueArray, int *length)
 //
 //   Purpose: For a node at given time, get all attributes.
@@ -708,7 +708,7 @@ int EXPORT_OUT_API ENR_getNodeResult(ENR_Handle p_handle, int periodIndex,
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
+int ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
         int linkIndex, float** outValueArray, int* length)
 //
 //   Purpose: For a link at given time, get all attributes
@@ -732,7 +732,7 @@ int EXPORT_OUT_API ENR_getLinkResult(ENR_Handle p_handle, int periodIndex,
     return errorcode;
 }
 
-int EXPORT_OUT_API ENR_getError(int err_code, char **err_msg)
+int ENR_getError(int err_code, char **err_msg)
 {
     char *temp = NULL;
 
