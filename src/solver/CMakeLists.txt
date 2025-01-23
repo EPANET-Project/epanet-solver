@@ -12,7 +12,6 @@
 set(EPANET_PUBLIC_HEADERS
     include/epanet2_2.h
     include/epanet2_enums.h
-    # include/epanet2.h
 )
 
 set(EPANET_PRIVATE_HEADERS
@@ -25,7 +24,6 @@ set(EPANET_PRIVATE_HEADERS
 )
 
 set(EPANET_SOURCES
-    # epanet.c
     epanet2_2.c
     errors.dat
     genmmd.c
@@ -51,7 +49,8 @@ set(EPANET_SOURCES
 )
 
 # configure file groups
-source_group("Library"
+source_group(
+  "Library"
     FILES
         ${EPANET_PRIVATE_HEADERS}
         ${EPANET_SOURCES}
@@ -195,6 +194,7 @@ install(
     FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/include/epanet2_2.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/include/epanet2_enums.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/epanet2_export.h"
     DESTINATION
         "${INCLUDE_DIST}"
 )
