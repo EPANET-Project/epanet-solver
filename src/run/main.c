@@ -12,7 +12,7 @@
 */
 
 #include <stdio.h>
-#include "epanet2.h"
+#include "epanet2_2.h"
 
 void  writeConsole(char *s)
 {
@@ -44,7 +44,7 @@ int  main(int argc, char *argv[])
     int  major;
     int  minor;
     int  patch;
-    
+
     // Check for proper number of command line arguments
     if (argc < 3)
     {
@@ -55,12 +55,12 @@ int  main(int argc, char *argv[])
     }
 
     // Get version number and display in Major.Minor.Patch format
-    ENgetversion(&version);
+    EN_getversion(&version);
     major = version/10000;
     minor = (version%10000)/100;
     patch = version%100;
     printf("\n... Running EPANET Version %d.%d.%d\n", major, minor, patch);
-  
+
     // Assign pointers to file names
     f1 = argv[1];
     f2 = argv[2];
@@ -68,7 +68,7 @@ int  main(int argc, char *argv[])
     else          f3 = blank;
 
     // Run EPANET
-    errcode = ENepanet(f1, f2, f3, &writeConsole);
+    errcode = EN_epanet(f1, f2, f3, &writeConsole);
 
     // Blank out the last progress message
     printf("\r                                                               ");
@@ -86,7 +86,7 @@ int  main(int argc, char *argv[])
     }
     else
     {
-        ENgeterror(errcode, errmsg, 255);
+        EN_geterror(errcode, errmsg, 255);
         printf("\n... EPANET failed with %s.\n", errmsg);
         return 100;
     }

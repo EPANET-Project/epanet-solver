@@ -16,7 +16,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 
-#include "test_toolkit.hpp"
+#include "test_solver.hpp"
 
 
 BOOST_AUTO_TEST_SUITE (test_project)
@@ -77,10 +77,10 @@ BOOST_AUTO_TEST_CASE(test_save)
     error = EN_open(ph_save, DATA_PATH_NET1, DATA_PATH_RPT, DATA_PATH_OUT);
     BOOST_REQUIRE(error == 0);
 
-    error = EN_saveinpfile(ph_save, "test_reopen.inp");
+    error = EN_saveinpfile(ph_save, "reopen.inp");
     BOOST_REQUIRE(error == 0);
 
-    BOOST_CHECK(boost::filesystem::exists("test_reopen.inp") == true);
+    BOOST_CHECK(boost::filesystem::exists("reopen.inp") == true);
 
     error = EN_close(ph_save);
     BOOST_REQUIRE(error == 0);
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(test_reopen, * boost::unit_test::depends_on("test_project/t
     EN_Project ph_reopen;
 
     EN_createproject(&ph_reopen);
-	error = EN_open(ph_reopen, "test_reopen.inp", DATA_PATH_RPT, DATA_PATH_OUT);
+	error = EN_open(ph_reopen, "reopen.inp", DATA_PATH_RPT, DATA_PATH_OUT);
     BOOST_REQUIRE(error == 0);
 
     error = EN_close(ph_reopen);
@@ -153,13 +153,13 @@ BOOST_FIXTURE_TEST_CASE(test_getcount, FixtureOpenClose)
     std::vector<int> ref = { 11, 2, 13, 1, 1, 2, 0 };
 
     for (i=EN_NODECOUNT; i<=EN_RULECOUNT; i++) {
-        error = EN_getcount(ph, i, array++);
+        error = EN_getcount(ph, (EN_CountType)i, array++);
         BOOST_REQUIRE(error == 0);
     }
 
     BOOST_CHECK_EQUAL_COLLECTIONS(ref.begin(), ref.end(), test.begin(), test.end());
 
-	error = EN_getcount(ph, 7, &i);
+	error = EN_getcount(ph, (EN_CountType)7, &i);
 	BOOST_CHECK(error == 251);
 }
 
@@ -222,7 +222,6 @@ BOOST_FIXTURE_TEST_CASE(test_addpattern, FixtureOpenClose)
 
 BOOST_FIXTURE_TEST_CASE(test_add_control, FixtureOpenClose)
 {
-    int flag = 00;
     long t, tstep;
     double h1, h2;
     int Cindex;
@@ -230,7 +229,7 @@ BOOST_FIXTURE_TEST_CASE(test_add_control, FixtureOpenClose)
     // run with original controls
     error = EN_openH(ph);
     BOOST_REQUIRE(error == 0);
-    error = EN_initH(ph, flag);
+    error = EN_initH(ph, EN_NOSAVE);
     BOOST_REQUIRE(error == 0);
     do {
         error = EN_runH(ph, &t);
@@ -245,23 +244,23 @@ BOOST_FIXTURE_TEST_CASE(test_add_control, FixtureOpenClose)
     BOOST_REQUIRE(error == 0);
 
     // disable current controls
-    error = EN_setcontrol(ph, 1, 0, 0, 0, 0, 0);
+    error = EN_setcontrol(ph, 1, EN_LOWLEVEL, 0, 0, 0, 0);
     BOOST_REQUIRE(error == 0);
-    error = EN_setcontrol(ph, 2, 1, 0, 0, 0, 0);
+    error = EN_setcontrol(ph, 2, EN_HILEVEL, 0, 0, 0, 0);
     BOOST_REQUIRE(error == 0);
 
     // add new controls
-    error = EN_addcontrol(ph, 0, 13, 1, 11, 110, &Cindex);
+    error = EN_addcontrol(ph, EN_LOWLEVEL, 13, 1, 11, 110, &Cindex);
     BOOST_REQUIRE(error == 0);
     BOOST_CHECK(Cindex == 3);
-    error = EN_addcontrol(ph, 1, 13, 0, 11, 140, &Cindex);
+    error = EN_addcontrol(ph, EN_HILEVEL, 13, 0, 11, 140, &Cindex);
     BOOST_REQUIRE(error == 0);
     BOOST_CHECK(Cindex == 4);
 
     // run with new controls
     error = EN_openH(ph);
     BOOST_REQUIRE(error == 0);
-    error = EN_initH(ph, flag);
+    error = EN_initH(ph, EN_NOSAVE);
     BOOST_REQUIRE(error == 0);
     do {
         error = EN_runH(ph, &t);

@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 
+#include "epanet2_enums.h"
 #include "hash.h"
 
 /*
@@ -129,6 +130,7 @@ typedef enum {
   CONTROL,
   RULE
 } ObjectType;
+
 
 typedef enum {
   JUNCTION,

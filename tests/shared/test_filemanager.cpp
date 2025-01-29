@@ -19,7 +19,7 @@
 #include "shared/filemanager.h"
 
 
-#define DATA_PATH_OUTPUT "./example1.out"
+#define DATA_PATH_OUTPUT "./test_example1.out"
 
 
 boost::test_tools::predicate_result check_string(std::string test, std::string ref)

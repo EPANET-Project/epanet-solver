@@ -14,7 +14,7 @@
 //#define BOOST_ALL_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
-#include "test_toolkit.hpp"
+#include "test_solver.hpp"
 
 
 BOOST_AUTO_TEST_SUITE (test_analysis)
@@ -37,14 +37,14 @@ BOOST_FIXTURE_TEST_CASE(test_anlys_getoption, FixtureOpenClose)
 
 
     for (i=EN_TRIALS; i<=EN_CONCENLIMIT; i++) {
-        error = EN_getoption(ph, i, array++);
+        error = EN_getoption(ph, (EN_Option)i, array++);
         BOOST_REQUIRE(error == 0);
     }
 
     BOOST_CHECK_EQUAL_COLLECTIONS(ref.begin(), ref.end(), test.begin(), test.end());
 
     double temp;
-    error = EN_getoption(ph, 25, &temp);
+    error = EN_getoption(ph, (EN_Option)25, &temp);
     BOOST_CHECK(error == 251);
 }
 
@@ -65,14 +65,14 @@ BOOST_FIXTURE_TEST_CASE(test_anlys_gettimeparam, FixtureOpenClose)
 
 
     for (i=EN_DURATION; i<=EN_NEXTEVENTTANK; i++) {
-        error = EN_gettimeparam(ph, i, array++);
+        error = EN_gettimeparam(ph,  (EN_TimeParameter)i, array++);
         BOOST_REQUIRE(error == 0);
     }
 
     BOOST_CHECK_EQUAL_COLLECTIONS(ref.begin(), ref.end(), test.begin(), test.end());
 
     long temp;
-    error = EN_gettimeparam(ph, 18, &temp);
+    error = EN_gettimeparam(ph, (EN_TimeParameter)18, &temp);
     BOOST_CHECK(error == 251);
 }
 

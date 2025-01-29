@@ -368,14 +368,15 @@ typedef enum {
 
 /// Hydraulic initialization options
 /**
-These options are used to initialize a new hydraulic analysis when @ref EN_initH is called.
+These options are used to initialize a new hydraulic and quality analysis when
+@ref EN_initH or @ref EN_initQ is called.
 */
 typedef enum {
-  EN_NOSAVE        = 0,  //!< Don't save hydraulics; don't re-initialize flows
-  EN_SAVE          = 1,  //!< Save hydraulics to file, don't re-initialize flows
+  EN_NOSAVE        = 0,  //!< Don't save hydraulics or quality; don't re-initialize flows
+  EN_SAVE          = 1,  //!< Save hydraulics or quality, don't re-initialize flows
   EN_INITFLOW      = 10, //!< Don't save hydraulics; re-initialize flows
   EN_SAVE_AND_INIT = 11  //!< Save hydraulics; re-initialize flows
-} EN_InitHydOption;
+} EN_SaveInitOptions;
 
 /// Types of pump curves
 /**

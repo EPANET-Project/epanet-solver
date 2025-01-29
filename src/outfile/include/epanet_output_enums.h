@@ -36,9 +36,9 @@ Defines the unit type -- flow, pressure, or quality -- used by
 */
 typedef enum {
     ENR_flowUnits   = 1,  //!< Flow units
-    ENR_pressUnits  = 2,  //!< Pressure units
+    ENR_presUnits   = 2,  //!< Pressure units
     ENR_qualUnits   = 3   //!< Quality units
-} ENR_Units;
+} ENR_UnitTypes;
 
 /**
 Defines flow unit types.
@@ -63,7 +63,7 @@ typedef enum {
 	ENR_PSI         = 0,  //!< Pounds per square inch psi
 	ENR_MTR         = 1,  //!< Meters m
 	ENR_KPA         = 2   //!< Kilo Pascal kPa
-} ENR_PressUnits;
+} ENR_PresUnits;
 
 /**
 Defines quality unit types.

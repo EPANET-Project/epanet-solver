@@ -62,7 +62,7 @@ set_target_properties(test_net_builder test_reent
 set(TEST_BIN_DIRECTORY "${CMAKE_BINARY_DIR}/bin/$<CONFIGURATION>")
 
 add_test(NAME test_toolkit
-    COMMAND "${TEST_BIN_DIRECTORY}/test_toolkit"
+    COMMAND "${TEST_BIN_DIRECTORY}/test_solver"
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/solver/data
     )
 
