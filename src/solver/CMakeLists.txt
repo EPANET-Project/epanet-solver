@@ -171,7 +171,7 @@ install(
         epanet2Targets
     RUNTIME
         DESTINATION
-            ${TOOL_DIST}
+            $<IF:$<STREQUAL:${SKBUILD},2>,epanet_toolkit,${TOOL_DIST}>
     LIBRARY
         DESTINATION
             $<IF:$<STREQUAL:${SKBUILD},2>,epanet_toolkit,${LIBRARY_DIST}>
