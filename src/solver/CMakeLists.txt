@@ -170,13 +170,17 @@ install(
     EXPORT
         epanet2Targets
     RUNTIME
-        DESTINATION "${TOOL_DIST}"
+        DESTINATION
+            ${TOOL_DIST}
     LIBRARY
-        DESTINATION "${LIBRARY_DIST}"
+        DESTINATION
+            $<IF:$<STREQUAL:${SKBUILD},2>,epanet_toolkit,${LIBRARY_DIST}>
     ARCHIVE
-        DESTINATION "${LIBRARY_DIST}"
+        DESTINATION
+            ${LIBRARY_DIST}
     INCLUDES
-        DESTINATION "${INCLUDE_DIST}"
+        DESTINATION
+            ${INCLUDE_DIST}
 )
 
 # Install target import scripts so other cmake projects can use epanet libraries

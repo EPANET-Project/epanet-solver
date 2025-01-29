@@ -59,15 +59,19 @@ file(COPY ${CMAKE_CURRENT_BINARY_DIR}/epanet_output_export.h
 )
 
 
-install(TARGETS epanet-output
+install(TARGETS
+  epanet-output
     EXPORT
         epanet-outputTargets
     RUNTIME
-        DESTINATION "${TOOL_DIST}"
+        DESTINATION
+            ${TOOL_DIST}
     LIBRARY
-        DESTINATION "${LIBRARY_DIST}"
+        DESTINATION
+            $<IF:$<STREQUAL:${SKBUILD},2>,epanet_toolkit,${LIBRARY_DIST}>
     ARCHIVE
-        DESTINATION "${LIBRARY_DIST}"
+        DESTINATION
+            ${LIBRARY_DIST}
 )
 
 # Install target import scripts so other cmake projects can use epanet libraries
